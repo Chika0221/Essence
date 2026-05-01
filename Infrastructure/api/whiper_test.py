@@ -6,18 +6,16 @@ from pydantic import BaseModel
 from faster_whisper import WhisperModel
 import ollama
 
-app = FastAPI(title="Essential Recorder API")
-
 # --- 初期化設定 ---
 # CPU環境でも動くように "base" または "small" を指定、compute_type="int8"で軽量化
 print("音声認識モデルをロード中...")
-whisper_model = WhisperModel("base", device="cpu", compute_type="int8")
+whisper_model = WhisperModel("small", device="cpu", compute_type="int8")
 
 # Ollamaで使用するモデル名（事前に pull しておいたものを指定）
 LLM_MODEL_NAME = "qwen2.5" 
 
 
-file_path = r"zawa.aac"
+file_path = r"audio/zawa.mp3"
 filename = os.path.basename(file_path)
 
 if not filename.endswith(('.wav', '.m4a', '.mp3', '.aac')):
