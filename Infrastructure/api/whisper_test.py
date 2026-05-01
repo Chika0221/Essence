@@ -24,11 +24,16 @@ whisper_model = WhisperModel("small", device="cpu", compute_type="int8")
 def emit_sse(event: str, data: Dict[str, Any]) -> str:
     return f"event: {event}\ndata: {json.dumps(data, ensure_ascii=False)}\n\n"
 
-def split_audio_stub(path: str, chunk_ms: int = 5 * 60 * 1000) -> List[str]:
+# def split_audio_stub(path: str, chunk_ms: int = 5 * 60 * 1000) -> List[str]:
+def split_audio_stub(path: str, chunk_ms: int = 10 * 1000) -> List[str]:
+
+    print("音声ファイルの分割...")
+
     audio = AudioSegment.from_file(path)
     chunk_paths: List[str] = []
 
     for start in range(0, len(audio),chunk_ms):
+        print("分割ゥ!!")
         end = min(start + chunk_ms, len(audio))
         chunk = audio[start:end]
         temp_chunk = tempfile.NamedTemporaryFile(delete=False, suffix=".wav")
@@ -37,8 +42,10 @@ def split_audio_stub(path: str, chunk_ms: int = 5 * 60 * 1000) -> List[str]:
 
         chunk.export(temp_chunk_path, format="wav")
         chunk_paths.append(temp_chunk_path)
+
     
-    return [path]
+    
+    return chunk_paths
 
 def summarize_stub(text: str, mode: str) -> str:
     """要約のスタブです。実際のOllama呼び出しに置き換えてください。"""
@@ -59,7 +66,12 @@ async def transcribe_and_stream(job_id: str) -> None:
     all_transcripts = []
     all_summaries = []
 
+    print("文字起こし開始...")
+
     for idx, chunk_path in enumerate(chunks, start=1):
+
+
+
         # whisperによる文字起こし
         segments, _ = whisper_model.transcribe(chunk_path, beam_size=5)
         chunk_text = "".join([seg.text for seg in segments])
@@ -131,6 +143,8 @@ async def process_audio(
         "events": [],
         "result": None,
     }
+
+    print(f"status: queued, mode: {mode},target_path: {target_path},")
 
     # バックグラウンドタスクの開始
     asyncio.create_task(transcribe_and_stream(job_id))
