@@ -6,13 +6,14 @@ from pydub import AudioSegment
 import tempfile
 
 LLM_MODEL_NAME = "granite4.1:3b"
-PROMPTS_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "prompts.json"))
-_PROMPTS_CACHE: Dict[str, Any]  = {}
+# PROMPTS_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "prompts.json"))
+PROMPTS_PATH = "helpers/prompts.json"
+_PROMPTS_CACHE: Dict[str, Any] = {}
 
 
 def load_prompts() -> Dict[str, Any]:
     global _PROMPTS_CACHE
-    if _PROMPTS_CACHE is None:
+    if _PROMPTS_CACHE == {}:
         with open(PROMPTS_PATH, "r", encoding="utf-8") as f:
             _PROMPTS_CACHE = json.load(f)
     return _PROMPTS_CACHE

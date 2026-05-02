@@ -1,12 +1,10 @@
 import os
 import shutil
 import uuid
-import json
 import asyncio
 import tempfile
 import subprocess
-import ollama
-from typing import Dict, Any, List
+from typing import Dict, Any
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.responses import StreamingResponse
 from faster_whisper import WhisperModel
@@ -14,8 +12,6 @@ from pydub import AudioSegment
 from contextlib import asynccontextmanager
 
 from helpers.helper import emit_sse, remove_temp_files, split_audio, summarize
-
-
 
 
 ollama_proc = None
