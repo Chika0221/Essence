@@ -145,6 +145,7 @@ async def process_audio(
         target_path = temp_wav.name
         temp_wav.close()
         audio.export(target_path, format="wav")
+        os.remove(temp_input_path)  # Clean up original AAC file
 
     job_id = str(uuid.uuid4())
     JOBS[job_id] = {
