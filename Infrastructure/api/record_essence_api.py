@@ -4,8 +4,9 @@ import uuid
 import asyncio
 import tempfile
 import subprocess
+import json
 from typing import Dict, Any
-from fastapi import FastAPI, UploadFile, File, HTTPException
+from fastapi import FastAPI, UploadFile, File, HTTPException, WebSocket, WebSocketDisconnect
 from fastapi.responses import StreamingResponse
 from faster_whisper import WhisperModel
 from pydub import AudioSegment
@@ -75,6 +76,14 @@ async def transcribe_and_stream(job_id: str) -> None:
 
     # 処理が終わったら一時ファイルを削除
     await asyncio.to_thread(remove_temp_files, chunks + [target_path])
+
+
+def write_temp_wav(data: bytes) -> str:
+    temp_chunk = tempfile.NamedTemporaryFile(delete=False, suffix=".wav")
+    temp_chunk.write(data)
+    temp_chunk_path = temp_chunk.name
+    temp_chunk.close()
+    return temp_chunk_path
 
 
 
@@ -183,4 +192,85 @@ async def result(job_id: str):
     if job["status"] != "done":
         return {"status": job["status"]}
     return {"status": "done", "result": job["result"]}
+
+
+@app.websocket("/ws/stream")
+async def ws_stream(websocket: WebSocket, mode: str = "minutes"):
+    await websocket.accept()
+
+    chunk_index = 0
+    all_transcripts = []
+    all_summaries = []
+    temp_paths = []
+
+    try:
+        while True:
+            message = await websocket.receive()
+
+            if message.get("type") == "websocket.disconnect":
+                break
+
+            if message.get("bytes"):
+                chunk_index += 1
+                chunk_path = write_temp_wav(message["bytes"])
+                temp_paths.append(chunk_path)
+
+                def _transcribe_chunk(path: str) -> str:
+                    segments, _ = whisper_model.transcribe(path, beam_size=5, vad_filter=True)
+                    return "".join([seg.text for seg in segments])
+
+                chunk_text = await asyncio.to_thread(_transcribe_chunk, chunk_path)
+                all_transcripts.append(chunk_text)
+
+                await websocket.send_json({
+                    "event": "transcript",
+                    "chunk_index": chunk_index,
+                    "text": chunk_text
+                })
+
+                chunk_summary = await asyncio.to_thread(summarize, chunk_text, mode, "map")
+                all_summaries.append(chunk_summary)
+
+                await websocket.send_json({
+                    "event": "summary_partial",
+                    "chunk_index": chunk_index,
+                    "summary": chunk_summary
+                })
+
+                await asyncio.sleep(0)
+                continue
+
+            if message.get("text"):
+                text = message["text"].strip()
+                if text.lower() == "finish":
+                    break
+                try:
+                    payload = json.loads(text)
+                except json.JSONDecodeError:
+                    payload = None
+
+                if isinstance(payload, dict):
+                    if payload.get("type") == "finish":
+                        break
+                    if payload.get("type") == "config" and "mode" in payload:
+                        mode = payload["mode"]
+
+    except WebSocketDisconnect:
+        pass
+    finally:
+        final_summary = ""
+        if all_summaries:
+            final_summary = await asyncio.to_thread(summarize, "\n".join(all_summaries), mode, "reduce")
+
+        result = {
+            "mode": mode,
+            "transcript": "\n".join(all_transcripts),
+            "summary": final_summary
+        }
+
+        try:
+            await websocket.send_json({"event": "done", "result": result})
+        except Exception:
+            pass
+        await asyncio.to_thread(remove_temp_files, temp_paths)
 
