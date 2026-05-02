@@ -26,7 +26,7 @@ async def transcribe_and_stream(job_id: str) -> None:
     target_path = job["target_path"]
 
     JOBS[job_id]["status"] = "running"
-    chunks = split_audio(target_path)
+    chunks = await asyncio.to_thread(split_audio, target_path)
 
     all_transcripts = []
     all_summaries = []
@@ -36,8 +36,11 @@ async def transcribe_and_stream(job_id: str) -> None:
     for idx, chunk_path in enumerate(chunks, start=1):
 
         # whisperによる文字起こし
-        segments, _ = whisper_model.transcribe(chunk_path, beam_size=5, vad_filter=True)
-        chunk_text = "".join([seg.text for seg in segments])
+        def _transcribe_chunk(path: str) -> str:
+            segments, _ = whisper_model.transcribe(path, beam_size=5, vad_filter=True)
+            return "".join([seg.text for seg in segments])
+
+        chunk_text = await asyncio.to_thread(_transcribe_chunk, chunk_path)
         all_transcripts.append(chunk_text)
 
         # 文字起こし結果を送信
@@ -47,7 +50,7 @@ async def transcribe_and_stream(job_id: str) -> None:
         }))
 
         # チャンクごとの要約
-        chunk_summary = summarize(chunk_text, mode, stage="map")
+        chunk_summary = await asyncio.to_thread(summarize, chunk_text, mode, "map")
         all_summaries.append(chunk_summary)
 
         # 部分的な要約を送信
@@ -59,7 +62,7 @@ async def transcribe_and_stream(job_id: str) -> None:
         await asyncio.sleep(0)  # イベントループに処理を戻す
 
     # 最終要約 (統合)
-    final_summary = summarize("\n".join(all_summaries), mode, stage="reduce")
+    final_summary = await asyncio.to_thread(summarize, "\n".join(all_summaries), mode, "reduce")
 
     job["result"] = {
         "mode": mode,
@@ -71,7 +74,7 @@ async def transcribe_and_stream(job_id: str) -> None:
 
 
     # 処理が終わったら一時ファイルを削除
-    remove_temp_files(chunks + [target_path])
+    await asyncio.to_thread(remove_temp_files, chunks + [target_path])
 
 
 
