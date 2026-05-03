@@ -1,3 +1,4 @@
+import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:window_manager/window_manager.dart';
@@ -20,6 +21,15 @@ Future<void> configureAndShowWindow(String windowId) async {
   await windowManager.waitUntilReadyToShow(options, () async {
     if (windowId == 'app_bar') {
       await windowManager.setResizable(false);
+    } else {
+      // mainWIndowの設定
+      doWhenWindowReady(() {
+        const initialSize = Size(900, 700);
+        appWindow.minSize = Size(400, 300);
+        appWindow.size = initialSize;
+        appWindow.alignment = Alignment.center;
+        appWindow.show();
+      });
     }
 
     await windowManager.show();
@@ -32,7 +42,7 @@ WindowOptions _windowOptionsFor(String windowId) {
     case 'app_bar':
       return const WindowOptions(
         title: 'Record Essence - AppBar',
-        size: Size(900, 64),
+        size: Size(10000, 64),
         minimumSize: Size(200, 64),
         maximumSize: Size(10000, 64),
         // skipTaskbar: true,
@@ -44,7 +54,6 @@ WindowOptions _windowOptionsFor(String windowId) {
         title: 'Record Essence',
         size: Size(900, 700),
         minimumSize: Size(400, 300),
-        center: true,
       );
   }
 }
