@@ -18,23 +18,33 @@ Future<void> configureAndShowWindow(String windowId) async {
 
   final options = _windowOptionsFor(windowId);
 
-  await windowManager.waitUntilReadyToShow(options, () async {
-    if (windowId == 'app_bar') {
+  if (windowId == "app_bar") {
+    await windowManager.waitUntilReadyToShow(options, () async {
       await windowManager.setResizable(false);
-    } else {
-      // mainWIndowの設定
-      doWhenWindowReady(() {
-        const initialSize = Size(900, 700);
-        appWindow.minSize = Size(400, 300);
-        appWindow.size = initialSize;
-        appWindow.alignment = Alignment.center;
-        appWindow.show();
-      });
-    }
 
-    await windowManager.show();
-    await windowManager.focus();
-  });
+      await windowManager.show();
+      // await windowManager.focus();
+    });
+  } else {
+    // mainWIndowの設定
+    // doWhenWindowReady(() {
+    //   const initialSize = Size(900, 700);
+    //   appWindow.title = "Record Essence";
+    //   appWindow.minSize = Size(400, 300);
+    //   appWindow.size = initialSize;
+    //   appWindow.alignment = Alignment.center;
+    //   appWindow.show();
+    // });
+    doWhenWindowReady(() {
+      appWindow.title = options.title!;
+      appWindow.minSize = options.minimumSize;
+      appWindow.size = options.size ?? Size(400, 300);
+      appWindow.alignment = (options.center != null)
+          ? Alignment.center
+          : Alignment.topLeft;
+      appWindow.show();
+    });
+  }
 }
 
 WindowOptions _windowOptionsFor(String windowId) {
@@ -54,6 +64,7 @@ WindowOptions _windowOptionsFor(String windowId) {
         title: 'Record Essence',
         size: Size(900, 700),
         minimumSize: Size(400, 300),
+        center: true,
       );
   }
 }
