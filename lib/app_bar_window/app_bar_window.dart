@@ -1,11 +1,15 @@
-import 'package:bitsdojo_window/bitsdojo_window.dart';
+// Flutter imports:
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
+// Package imports:
+import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import '../main.dart';
-import '../main_window/main_window.dart';
+
+// Project imports:
+import 'package:record_essence/providers/window_mode_provider.dart';
 
 class AppBarWindow extends HookConsumerWidget {
   const AppBarWindow({super.key});
@@ -57,7 +61,7 @@ class AppBarWindow extends HookConsumerWidget {
             Slider(value: 1, onChanged: (value) {}),
             OutlinedButton(
               onPressed: () async {
-                ref.read(typeProvider.notifier).state = MainWindow();
+                ref.read(windowModeProvider.notifier).toggle();
               },
               child: Text("aaaa"),
             ),

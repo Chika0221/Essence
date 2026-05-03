@@ -1,7 +1,12 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:hooks_riverpod/legacy.dart';
 
+// Package imports:
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+
+// Project imports:
+import 'package:record_essence/app_bar_window/app_bar_window.dart';
+import 'package:record_essence/providers/window_mode_provider.dart';
 import 'main_window/main_window.dart';
 
 Future<void> main(List<String> args) async {
@@ -12,14 +17,17 @@ Future<void> main(List<String> args) async {
   runApp(scope);
 }
 
-final typeProvider = StateProvider<Widget>((ref) {
-  return MainWindow();
-});
-
 class MyApp extends HookConsumerWidget {
   const MyApp({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return MaterialApp(home: ref.watch(typeProvider));
+    final windowMode = ref.watch(windowModeProvider);
+
+    return MaterialApp(
+      home: switch (windowMode) {
+        WindowMode.main => MainWindow(),
+        WindowMode.appBar => AppBarWindow(),
+      },
+    );
   }
 }

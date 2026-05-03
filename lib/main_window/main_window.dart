@@ -1,7 +1,13 @@
-import 'package:bitsdojo_window/bitsdojo_window.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
+// Project imports:
+import 'package:record_essence/providers/window_mode_provider.dart';
 import '../app_bar_window/app_bar_window.dart';
 import '../main.dart';
 
@@ -31,7 +37,7 @@ class MainWindow extends HookConsumerWidget {
             FilledButton(onPressed: () async {}, child: Text("Window作成")),
             FilledButton(
               onPressed: () async {
-                ref.read(typeProvider.notifier).state = AppBarWindow();
+                ref.read(windowModeProvider.notifier).toggle();
               },
               child: Text("Window作成"),
             ),
