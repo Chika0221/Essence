@@ -3,9 +3,9 @@
 #include <windows.h>
 
 #include <desktop_multi_window/desktop_multi_window_plugin.h>
+#include <window_manager/window_manager_plugin.h>
 
 #include "flutter_window.h"
-#include "flutter/generated_plugin_registrant.h"
 #include "appbar_channel.h"
 #include "utils.h"
 
@@ -26,7 +26,11 @@ namespace
       return;
     }
 
-    RegisterPlugins(controller->engine());
+    // Register only the plugins required for secondary engines created by
+    // desktop_multi_window. Registering all plugins can lead to duplicate
+    // registration of desktop_multi_window itself.
+    WindowManagerPluginRegisterWithRegistrar(
+        controller->engine()->GetRegistrarForPlugin("WindowManagerPlugin"));
     HWND view_hwnd = controller->view()->GetNativeWindow();
     HWND top_level = GetAncestor(view_hwnd, GA_ROOT);
     RegisterAppBarChannel(controller->engine(), top_level);

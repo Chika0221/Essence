@@ -44,7 +44,16 @@ class AppBarWindow extends HookConsumerWidget {
     }, const []);
 
     return MaterialApp(
-      home: Scaffold(body: Center(child: Text("バー"))),
+      home: Scaffold(
+        body: Center(
+          child: Row(
+            children: [
+              Text("バー"),
+              Slider(value: 1, onChanged: (value) {}),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
