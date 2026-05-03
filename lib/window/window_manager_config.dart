@@ -25,16 +25,7 @@ Future<void> configureAndShowWindow(String windowId) async {
       await windowManager.show();
       // await windowManager.focus();
     });
-  } else {
-    // mainWIndowの設定
-    // doWhenWindowReady(() {
-    //   const initialSize = Size(900, 700);
-    //   appWindow.title = "Record Essence";
-    //   appWindow.minSize = Size(400, 300);
-    //   appWindow.size = initialSize;
-    //   appWindow.alignment = Alignment.center;
-    //   appWindow.show();
-    // });
+  } else if (windowId == "main") {
     doWhenWindowReady(() {
       appWindow.title = options.title!;
       appWindow.minSize = options.minimumSize;
@@ -44,6 +35,8 @@ Future<void> configureAndShowWindow(String windowId) async {
           : Alignment.topLeft;
       appWindow.show();
     });
+  } else {
+    await windowManager.show();
   }
 }
 
