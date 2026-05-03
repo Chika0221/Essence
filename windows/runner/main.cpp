@@ -2,7 +2,6 @@
 #include <flutter/flutter_view_controller.h>
 #include <windows.h>
 
-#include <desktop_multi_window/desktop_multi_window_plugin.h>
 #include <window_manager/window_manager_plugin.h>
 
 #include "flutter_window.h"
@@ -54,9 +53,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prev,
   // Initialize COM, so that it is available for use in the library and/or
   // plugins.
   ::CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED);
-
-  // Ensure plugins can register on engines created by desktop_multi_window.
-  DesktopMultiWindowSetWindowCreatedCallback(OnDesktopMultiWindowCreated);
 
   flutter::DartProject project(L"data");
 

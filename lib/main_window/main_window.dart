@@ -1,56 +1,41 @@
-import 'dart:convert';
-
-import 'package:desktop_multi_window/desktop_multi_window.dart';
-import 'package:flutter/foundation.dart';
+import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:window_manager/window_manager.dart';
-
-import '../window/window_manager_config.dart';
+import '../app_bar_window/app_bar_window.dart';
+import '../main.dart';
 
 class MainWindow extends HookConsumerWidget {
-  const MainWindow({required this.windowId, super.key});
-
-  final String windowId;
+  const MainWindow({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     useEffect(() {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        configureAndShowWindow(windowId);
+        doWhenWindowReady(() {
+          appWindow.title = 'Record Essence';
+          appWindow.minSize = Size(400, 300);
+          appWindow.size = Size(900, 700);
+          appWindow.alignment = Alignment.center;
+          appWindow.show();
+        });
       });
       return null;
     }, const []);
 
-    return MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Column(
-            children: [
-              Text("メイン"),
-              FilledButton(
-                onPressed: () async {
-                  final args = jsonEncode({'windowId': 'app_bar'});
-
-                  await WindowController.create(
-                    WindowConfiguration(hiddenAtLaunch: true, arguments: args),
-                  );
-
-                  // 2枚目を開いたら、1枚目(現在のウィンドウ)を自動で閉じる
-                  await windowManager.ensureInitialized();
-                  await windowManager.hide();
-                },
-                child: Text("Window作成"),
-              ),
-              FilledButton(
-                onPressed: () async {
-                  await windowManager.show();
-                },
-                child: Text("Window作成"),
-              ),
-            ],
-          ),
+    return Scaffold(
+      body: Center(
+        child: Column(
+          children: [
+            Text("メイン"),
+            FilledButton(onPressed: () async {}, child: Text("Window作成")),
+            FilledButton(
+              onPressed: () async {
+                ref.read(typeProvider.notifier).state = AppBarWindow();
+              },
+              child: Text("Window作成"),
+            ),
+          ],
         ),
       ),
     );
