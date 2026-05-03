@@ -19,25 +19,29 @@ Future<void> main(List<String> args) async {
   runApp(window);
 }
 
-Widget _buildWindow(String arguments) {
+String _extractWindowId(String arguments) {
   if (arguments.isEmpty) {
-    return const MainWindow();
+    return _businessIdMain;
   }
 
   try {
     final decodedArguments = jsonDecode(arguments) as Map<String, dynamic>;
-    final windowId = decodedArguments["windowId"] as String?;
-
-    switch (windowId) {
-      case _businessIdAppBar:
-        return const AppBarWindow();
-      case _businessIdMain:
-      default:
-        return const MainWindow();
-    }
+    return (decodedArguments[_businessIdKey] as String?) ??
+        (decodedArguments['windowId'] as String?) ??
+        _businessIdMain;
   } catch (_) {
-    return const MainWindow();
+    return _businessIdMain;
   }
 }
 
-enum WindowIds { main, appBar }
+Widget _buildWindow(String arguments) {
+  final windowId = _extractWindowId(arguments);
+
+  switch (windowId) {
+    case _businessIdAppBar:
+      return const AppBarWindow(windowId: _businessIdAppBar);
+    case _businessIdMain:
+    default:
+      return const MainWindow(windowId: _businessIdMain);
+  }
+}

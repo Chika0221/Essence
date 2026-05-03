@@ -11,7 +11,7 @@ import 'package:record_essence/main_window/main_window.dart';
 
 void main() {
   testWidgets('MainWindow shows main label', (WidgetTester tester) async {
-    await tester.pumpWidget(const MainWindow());
+    await tester.pumpWidget(const MainWindow(windowId: 'main'));
 
     expect(find.text('メイン'), findsOneWidget);
   });

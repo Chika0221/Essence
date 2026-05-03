@@ -5,6 +5,7 @@
 #include <desktop_multi_window/desktop_multi_window_plugin.h>
 
 #include "flutter_window.h"
+#include "flutter/generated_plugin_registrant.h"
 #include "appbar_channel.h"
 #include "utils.h"
 
@@ -24,6 +25,8 @@ namespace
     {
       return;
     }
+
+    RegisterPlugins(controller->engine());
     HWND view_hwnd = controller->view()->GetNativeWindow();
     HWND top_level = GetAncestor(view_hwnd, GA_ROOT);
     RegisterAppBarChannel(controller->engine(), top_level);

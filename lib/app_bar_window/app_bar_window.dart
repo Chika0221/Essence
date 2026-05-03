@@ -4,12 +4,24 @@ import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../window/window_manager_config.dart';
+
 class AppBarWindow extends HookConsumerWidget {
-  const AppBarWindow({super.key});
+  const AppBarWindow({required this.windowId, super.key});
+
+  final String windowId;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isWindows =
         !kIsWeb && defaultTargetPlatform == TargetPlatform.windows;
+
+    useEffect(() {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        configureAndShowWindow(windowId);
+      });
+      return null;
+    }, const []);
 
     useEffect(() {
       if (!isWindows) {
@@ -22,7 +34,7 @@ class AppBarWindow extends HookConsumerWidget {
         channel.invokeMethod('setAppBar', {
           'enabled': true,
           'edge': 'top',
-          'thickness': 56.0,
+          'thickness': 64.0,
         });
       });
 
