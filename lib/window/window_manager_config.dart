@@ -19,12 +19,6 @@ Future<void> configureAndShowWindow(String windowId) async {
   final options = _windowOptionsFor(windowId);
 
   if (windowId == "app_bar") {
-    await windowManager.waitUntilReadyToShow(options, () async {
-      await windowManager.setResizable(false);
-
-      await windowManager.show();
-      // await windowManager.focus();
-    });
   } else if (windowId == "main") {
     doWhenWindowReady(() {
       appWindow.title = options.title!;
@@ -43,14 +37,7 @@ Future<void> configureAndShowWindow(String windowId) async {
 WindowOptions _windowOptionsFor(String windowId) {
   switch (windowId) {
     case 'app_bar':
-      return const WindowOptions(
-        title: 'Record Essence - AppBar',
-        size: Size(10000, 64),
-        minimumSize: Size(200, 64),
-        maximumSize: Size(10000, 64),
-        // skipTaskbar: true,
-        titleBarStyle: TitleBarStyle.hidden,
-      );
+
     case 'main':
     default:
       return const WindowOptions(
