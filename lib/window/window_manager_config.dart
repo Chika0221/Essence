@@ -35,7 +35,7 @@ WindowOptions _windowOptionsFor(String windowId) {
         size: Size(900, 64),
         minimumSize: Size(200, 64),
         maximumSize: Size(10000, 64),
-        skipTaskbar: true,
+        // skipTaskbar: true,
         titleBarStyle: TitleBarStyle.hidden,
       );
     case 'main':
