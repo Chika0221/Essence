@@ -8,8 +8,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
 import 'package:record_essence/providers/window_mode_provider.dart';
-import '../app_bar_window/app_bar_window.dart';
-import '../main.dart';
 
 class MainWindow extends HookConsumerWidget {
   const MainWindow({super.key});
