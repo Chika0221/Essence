@@ -1,15 +1,9 @@
-import 'dart:convert';
-
 import 'package:bitsdojo_window/bitsdojo_window.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:record_essence/app_bar_window/app_bar_window.dart';
-import 'package:record_essence/main.dart';
-import 'package:window_manager/window_manager.dart';
-
-import '../window/window_manager_config.dart';
+import '../app_bar_window/app_bar_window.dart';
+import '../main.dart';
 
 class MainWindow extends HookConsumerWidget {
   const MainWindow({super.key});
