@@ -6,6 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
 import 'package:record_essence/app_bar_window/app_bar_window.dart';
+import 'package:record_essence/providers/theme_provider.dart';
 import 'package:record_essence/providers/window_mode_provider.dart';
 import 'main_window/main_window.dart';
 
@@ -28,6 +29,9 @@ class MyApp extends HookConsumerWidget {
         WindowMode.main => MainWindow(),
         WindowMode.appBar => AppBarWindow(),
       },
+      theme: ref.watch(themeProvider),
+      darkTheme: ref.watch(darkThemeProvider),
+      themeMode: ThemeMode.system,
     );
   }
 }
