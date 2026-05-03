@@ -10,7 +10,17 @@ ThemeData buildAppTheme({
   required Brightness brightness,
   String fontFamily = appDefaultFontFamily,
 }) {
-  final base = ThemeData(brightness: brightness, fontFamily: fontFamily);
+  final base = ThemeData(
+    brightness: brightness,
+    fontFamily: fontFamily,
+    colorScheme: switch (brightness) {
+      Brightness.light => ColorScheme.fromSeed(seedColor: Colors.blue),
+      Brightness.dark => ColorScheme.fromSeed(
+        brightness: Brightness.dark,
+        seedColor: Colors.blue,
+      ),
+    },
+  );
 
   return _applyFontFamily(base: base, fontFamily: fontFamily);
 }
