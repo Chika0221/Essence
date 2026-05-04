@@ -26,7 +26,7 @@ class CustomTitleBar extends HookConsumerWidget implements PreferredSizeWidget {
         mainAxisAlignment: .end,
         children: [
           Expanded(child: WindowTitleBarBox(child: MoveWindow())),
-          WindowButton(icon: Tabler.adjustments, onClick: () {}),
+          WindowButton(icon: Tabler.adjustments, onClick: () { /* TODO: Implement settings button action */ }),
           WindowButton(
             icon: Tabler.arrow_bar_to_up,
             onClick: () {
