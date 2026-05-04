@@ -18,7 +18,7 @@ class HistorySideBar extends HookConsumerWidget {
     return Row(
       children: [
         Container(
-          width: _sidebarWidth.value,
+          width: sidebarWidth.value,
           color: colorScheme.surfaceContainerLow,
           child: const Center(child: Text("Sidebar")),
         ),
@@ -27,11 +27,13 @@ class HistorySideBar extends HookConsumerWidget {
         GestureDetector(
           onHorizontalDragUpdate: (details) {
             // ドラッグ量に応じて幅を計算（最小・最大幅で制限）
-            _sidebarWidth.value = (_sidebarWidth.value + details.delta.dx)
-                .clamp(_minWidth, _maxWidth);
+            sidebarWidth.value = (sidebarWidth.value + details.delta.dx).clamp(
+              minWidth,
+              maxWidth,
+            );
           },
           onHorizontalDragEnd: (details) {
-            if (_minWidth <= _sidebarWidth.value && _sidebarWidth.value < 100) {
+            if (minWidth <= sidebarWidth.value && sidebarWidth.value < 100) {
               print("aa");
             }
           },

@@ -7,8 +7,10 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:iconify_flutter_plus/iconify_flutter_plus.dart';
 import 'package:iconify_flutter_plus/icons/tabler.dart';
+import 'package:window_manager/window_manager.dart';
 
 // Project imports:
+import 'package:record_essence/providers/app_window_state_provider.dart';
 import 'package:record_essence/providers/window_mode_provider.dart';
 
 class CustomTitleBar extends HookConsumerWidget implements PreferredSizeWidget {
@@ -19,14 +21,20 @@ class CustomTitleBar extends HookConsumerWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isMaximize = useState(false);
+    final windowState = ref.watch(appWindowStateProvider);
+    final wm = WindowManager.instance;
 
     return SizedBox(
       child: Row(
         mainAxisAlignment: .end,
         children: [
           Expanded(child: WindowTitleBarBox(child: MoveWindow())),
-          WindowButton(icon: Tabler.adjustments, onClick: () { /* TODO: Implement settings button action */ }),
+          WindowButton(
+            icon: Tabler.adjustments,
+            onClick: () {
+              /* TODO: Implement settings button action */
+            },
+          ),
           WindowButton(
             icon: Tabler.arrow_bar_to_up,
             onClick: () {
@@ -36,22 +44,25 @@ class CustomTitleBar extends HookConsumerWidget implements PreferredSizeWidget {
           WindowButton(
             icon: Tabler.separator,
             onClick: () {
-              appWindow.minimize();
+              wm.minimize();
             },
           ),
           WindowButton(
-            icon: (isMaximize.value)
+            icon: (windowState.isMaximized)
                 ? Tabler.arrows_diagonal_minimize_2
                 : Tabler.arrows_diagonal,
             onClick: () {
-              appWindow.maximizeOrRestore();
-              isMaximize.value = !(isMaximize.value);
+              if (windowState.isMaximized) {
+                wm.unmaximize();
+              } else {
+                wm.maximize();
+              }
             },
           ),
           WindowButton(
             icon: Tabler.x,
             onClick: () {
-              appWindow.close();
+              wm.close();
             },
           ),
         ],
