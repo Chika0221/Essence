@@ -29,21 +29,38 @@ class MainWindow extends HookConsumerWidget {
       return null;
     }, const []);
 
+    // 初期幅の設定
+    final _sidebarWidth = useState(250.0);
+    final double _minWidth = 100.0;
+    final double _maxWidth = 500.0;
+
     return Scaffold(
       appBar: CustomTitleBar(),
-      body: Center(
-        child: Column(
-          children: [
-            Text("メイン"),
-            FilledButton(onPressed: () async {}, child: Text("Window作成")),
-            FilledButton(
-              onPressed: () async {
-                ref.read(windowModeProvider.notifier).toggle();
-              },
-              child: Text("Window作成"),
+      body: Row(
+        children: [
+          Container(
+            width: _sidebarWidth.value,
+            color: Colors.grey[200],
+            child: const Center(child: Text("Sidebar")),
+          ),
+
+          // ドラッグハンドル（サイズ変更のトリガー）
+          GestureDetector(
+            onHorizontalDragUpdate: (details) {
+              // ドラッグ量に応じて幅を計算（最小・最大幅で制限）
+              _sidebarWidth.value = (_sidebarWidth.value + details.delta.dx)
+                  .clamp(_minWidth, _maxWidth);
+            },
+            child: MouseRegion(
+              cursor: SystemMouseCursors.resizeLeftRight,
+              child: Container(
+                width: 4.0, // 当たり判定を考慮した幅
+                color: Colors.grey[400],
+              ),
             ),
-          ],
-        ),
+          ),
+          Expanded(child: Container(color: Colors.red)),
+        ],
       ),
     );
   }

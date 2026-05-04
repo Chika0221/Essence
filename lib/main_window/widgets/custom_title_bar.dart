@@ -7,7 +7,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:iconify_flutter_plus/iconify_flutter_plus.dart';
 import 'package:iconify_flutter_plus/icons/tabler.dart';
-import 'package:window_manager/window_manager.dart';
 
 // Project imports:
 import 'package:record_essence/providers/window_mode_provider.dart';
@@ -26,6 +25,8 @@ class CustomTitleBar extends HookConsumerWidget implements PreferredSizeWidget {
       child: Row(
         mainAxisAlignment: .end,
         children: [
+          Expanded(child: WindowTitleBarBox(child: MoveWindow())),
+          WindowButton(icon: Tabler.adjustments, onClick: () {}),
           WindowButton(
             icon: Tabler.arrow_bar_to_up,
             onClick: () {
