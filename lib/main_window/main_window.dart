@@ -7,8 +7,9 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
+import 'package:record_essence/main_window/history_side_bar/history_side_bar.dart';
 import 'package:record_essence/main_window/widgets/custom_title_bar.dart';
-import 'package:record_essence/providers/window_mode_provider.dart';
+import 'package:record_essence/main_window/widgets/essence_filter.dart';
 
 class MainWindow extends HookConsumerWidget {
   const MainWindow({super.key});
@@ -30,20 +31,28 @@ class MainWindow extends HookConsumerWidget {
     }, const []);
 
     return Scaffold(
-      appBar: CustomTitleBar(),
-      body: Center(
-        child: Column(
-          children: [
-            Text("メイン"),
-            FilledButton(onPressed: () async {}, child: Text("Window作成")),
-            FilledButton(
-              onPressed: () async {
-                ref.read(windowModeProvider.notifier).toggle();
-              },
-              child: Text("Window作成"),
+      body: Row(
+        children: [
+          HistorySideBar(),
+          Expanded(
+            child: Stack(
+              children: [
+                Column(
+                  children: [
+                    CustomTitleBar(),
+                    Expanded(
+                      child: Container(
+                        color: Theme.of(context).colorScheme.surface,
+                      ),
+                    ),
+                  ],
+                ),
+
+                ...EssenceFilter.filter(ref),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
