@@ -46,7 +46,13 @@ class FontFamilyTheme extends StatelessWidget {
   Widget build(BuildContext context) {
     final base = Theme.of(context);
     final overridden = _applyFontFamily(base: base, fontFamily: fontFamily);
-    return Theme(data: overridden, child: child);
+    return Theme(
+      data: overridden,
+      child: DefaultTextStyle.merge(
+        style: TextStyle(fontFamily: fontFamily),
+        child: child,
+      ),
+    );
   }
 }
 
