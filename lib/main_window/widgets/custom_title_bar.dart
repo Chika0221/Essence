@@ -11,10 +11,13 @@ import 'package:window_manager/window_manager.dart';
 
 // Project imports:
 import 'package:record_essence/providers/app_window_state_provider.dart';
+import 'package:record_essence/providers/ui_state/history_side_bar_open_provider.dart';
 import 'package:record_essence/providers/window_mode_provider.dart';
 
 class CustomTitleBar extends HookConsumerWidget implements PreferredSizeWidget {
-  const CustomTitleBar({super.key});
+  const CustomTitleBar({super.key, this.isShowOpenSideBar = false});
+
+  final bool isShowOpenSideBar;
 
   @override
   Size get preferredSize => Size.fromHeight(kToolbarHeight);
@@ -28,6 +31,14 @@ class CustomTitleBar extends HookConsumerWidget implements PreferredSizeWidget {
       child: Row(
         mainAxisAlignment: .end,
         children: [
+          if (isShowOpenSideBar)
+            WindowButton(
+              icon: Tabler.menu_2,
+              onClick: () {
+                ref.read(historySideBarOpenProvider.notifier).open();
+              },
+            ),
+
           Expanded(child: WindowTitleBarBox(child: MoveWindow())),
           WindowButton(
             icon: Tabler.adjustments,
