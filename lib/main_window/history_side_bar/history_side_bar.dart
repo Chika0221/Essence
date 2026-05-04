@@ -11,9 +11,9 @@ class HistorySideBar extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final colorScheme = Theme.of(context).colorScheme;
     // 初期幅の設定
-    final _sidebarWidth = useState(250.0);
-    final double _minWidth = 50.0;
-    final double _maxWidth = 500.0;
+    final sidebarWidth = useState(250.0);
+    const double minWidth = 50.0;
+    const double maxWidth = 500.0;
 
     return Row(
       children: [
