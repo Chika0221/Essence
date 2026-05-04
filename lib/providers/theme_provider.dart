@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+// Project imports:
+import 'package:record_essence/theme/theme_color.dart';
+
 const String appDefaultFontFamily = 'IBM Plex Sans JP';
 
 ThemeData buildAppTheme({
@@ -13,13 +16,7 @@ ThemeData buildAppTheme({
   final base = ThemeData(
     brightness: brightness,
     fontFamily: fontFamily,
-    colorScheme: switch (brightness) {
-      Brightness.light => ColorScheme.fromSeed(seedColor: Colors.blue),
-      Brightness.dark => ColorScheme.fromSeed(
-        brightness: Brightness.dark,
-        seedColor: Colors.blue,
-      ),
-    },
+    colorScheme: ColorTheme.color(brightness),
   );
 
   return _applyFontFamily(base: base, fontFamily: fontFamily);
