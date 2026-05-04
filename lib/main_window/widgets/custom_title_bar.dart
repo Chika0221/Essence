@@ -93,7 +93,7 @@ class WindowButton extends HookWidget {
           borderRadius: BorderRadius.circular(4),
         ),
         child: Center(
-          child: Iconify(icon, color: buttonColors.foagroundColor, size: 18),
+          child: Iconify(icon, color: buttonColors.foregroundColor, size: 18),
         ),
       ),
     );
@@ -102,7 +102,7 @@ class WindowButton extends HookWidget {
 
 class WindowButtonColors {
   final Color backgroundColor;
-  final Color foagroundColor;
+  final Color foregroundColor;
 
-  const WindowButtonColors(this.backgroundColor, this.foagroundColor);
+  const WindowButtonColors(this.backgroundColor, this.foregroundColor);
 }
