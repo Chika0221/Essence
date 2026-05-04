@@ -25,6 +25,7 @@ class MyApp extends HookConsumerWidget {
     final windowMode = ref.watch(windowModeProvider);
 
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: switch (windowMode) {
         WindowMode.main => MainWindow(),
         WindowMode.appBar => AppBarWindow(),

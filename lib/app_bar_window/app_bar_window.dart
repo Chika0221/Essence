@@ -23,8 +23,10 @@ class AppBarWindow extends HookConsumerWidget {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         doWhenWindowReady(() {
           appWindow.title = 'Record Essence - AppBar';
+          const fixedSize = Size(10000, 64);
           appWindow.minSize = Size(200, 64);
-          appWindow.size = Size(10000, 64);
+          // appWindow.maxSize = Size.fromHeight(64);
+          appWindow.size = fixedSize;
           appWindow.alignment = Alignment.topCenter;
           appWindow.show();
         });

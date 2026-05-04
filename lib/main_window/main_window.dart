@@ -7,6 +7,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
+import 'package:record_essence/main_window/widgets/custom_title_bar.dart';
 import 'package:record_essence/providers/window_mode_provider.dart';
 
 class MainWindow extends HookConsumerWidget {
@@ -20,6 +21,7 @@ class MainWindow extends HookConsumerWidget {
           appWindow.title = 'Record Essence';
           appWindow.minSize = Size(400, 300);
           appWindow.size = Size(900, 700);
+          // appWindow.maxSize = Size.infinite;
           appWindow.alignment = Alignment.center;
           appWindow.show();
         });
@@ -28,6 +30,7 @@ class MainWindow extends HookConsumerWidget {
     }, const []);
 
     return Scaffold(
+      appBar: CustomTitleBar(),
       body: Center(
         child: Column(
           children: [
