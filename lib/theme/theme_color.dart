@@ -39,9 +39,40 @@ class ColorTheme {
     onError: Color.fromARGB(255, 224, 195, 195),
   );
 
-  static final darkColorScheme = ColorScheme.fromSeed(
+  static final darkColorScheme = ColorScheme(
     brightness: Brightness.dark,
-    seedColor: Colors.blue,
+
+    surface: Color(0xFF121212),
+    surfaceDim: Color(0xFF0E0E0E),
+    surfaceBright: Color(0xFF1E1E1E),
+    surfaceContainerLowest: Color(0xFF0B0B0B),
+    surfaceContainerLow: Color(0xFF161616),
+    surfaceContainer: Color(0xFF1A1A1A),
+    surfaceContainerHigh: Color(0xFF1F1F1F),
+    surfaceContainerHighest: Color(0xFF242424),
+    onSurface: Color(0xFFE6E6E6),
+
+    // primary
+    primary: Color(0xFFBDBDBD),
+    onPrimary: Color(0xFF1A1A1A),
+    primaryContainer: Color(0xFF4A4A4A),
+    onPrimaryContainer: Color(0xFFF0F0F0),
+
+    // secondary
+    secondary: Color(0xFFA7A7A7),
+    onSecondary: Color(0xFF1A1A1A),
+    secondaryContainer: Color(0xFF3A3A3A),
+    onSecondaryContainer: Color(0xFFE2E2E2),
+
+    // tertiary
+    tertiary: Color(0xFFFF8A8A),
+    onTertiary: Color(0xFF3A0B0B),
+    tertiaryContainer: Color(0xFF7A2F2F),
+    onTertiaryContainer: Color(0xFFFFE5E5),
+
+    // error
+    error: Color(0xFFFF6B6B),
+    onError: Color(0xFF3A0B0B),
   );
 
   static ColorScheme color(Brightness brightness) {
