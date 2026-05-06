@@ -28,6 +28,8 @@ class RecordButton extends HookConsumerWidget {
       } else {
         controller.stop();
       }
+
+      return null;
     }, [isRecording.value]);
 
     return AnimatedBuilder(
