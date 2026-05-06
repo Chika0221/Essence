@@ -1,3 +1,6 @@
+// Dart imports:
+import 'dart:typed_data';
+
 // Package imports:
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:record/record.dart';
@@ -64,6 +67,20 @@ class RecorderStateNotifier extends Notifier<RecorderState> {
     } catch (e) {
       throw Exception("スタートができません：$e");
     }
+  }
+
+  Future<double> getCurrentAmplitude() async {
+    if (state.isRecording) {
+      final amplitude = await recorder.getAmplitude();
+      return amplitude.current;
+    }
+    return 0.0;
+  }
+
+  Stream<Uint8List> startStream() async* {
+    const config = RecordConfig(encoder: AudioEncoder.pcm16bits);
+    final stream = await recorder.startStream(config);
+    yield* stream;
   }
 
   /// 録音停止
