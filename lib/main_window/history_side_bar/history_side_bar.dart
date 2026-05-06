@@ -26,21 +26,23 @@ class HistorySideBar extends HookConsumerWidget {
         Container(
           width: sidebarWidth.value,
           color: colorScheme.surfaceContainerLow,
+          padding: const EdgeInsets.all(8.0),
           child: Column(
             crossAxisAlignment: .start,
             children: [
-              Positioned(
-                right: 8,
-                top: 8,
-                child: WindowButton(
-                  icon: Tabler.menu_2,
-                  onClick: () {
-                    ref.read(historySideBarOpenProvider.notifier).close();
-                  },
-                ),
+              Row(
+                mainAxisAlignment: .end,
+                children: [
+                  WindowButton(
+                    icon: Tabler.menu_2,
+                    onClick: () {
+                      ref.read(historySideBarOpenProvider.notifier).close();
+                    },
+                  ),
+                ],
               ),
               Expanded(child: Container(color: Colors.transparent)),
-              Padding(padding: EdgeInsets.all(8), child: ApiStateBox()),
+              ApiStateBox(),
             ],
           ),
         ),
