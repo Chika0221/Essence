@@ -8,6 +8,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+// Project imports:
+import 'package:record_essence/providers/record_provider.dart';
+
 class RecordButton extends HookConsumerWidget {
   const RecordButton({super.key});
   @override
@@ -15,7 +18,7 @@ class RecordButton extends HookConsumerWidget {
     final colorScheme = Theme.of(context).colorScheme;
     const double size = 200;
 
-    final isRecording = useState(false);
+    final isRecording = ref.watch(isRecordingProvider);
     final vsync = useSingleTickerProvider();
     final controller = useAnimationController(
       duration: Duration(seconds: 4),
@@ -23,14 +26,14 @@ class RecordButton extends HookConsumerWidget {
     );
 
     useEffect(() {
-      if (isRecording.value) {
+      if (isRecording) {
         controller.repeat();
       } else {
         controller.stop();
       }
 
       return null;
-    }, [isRecording.value]);
+    }, [isRecording]);
 
     return AnimatedBuilder(
       animation: controller,
@@ -40,8 +43,15 @@ class RecordButton extends HookConsumerWidget {
         return CustomPaint(
           painter: RecordPeinter(context: context, angle: angle),
           child: GestureDetector(
-            onTap: () {
-              isRecording.value = !isRecording.value;
+            onTap: () async {
+              if (isRecording) {
+                final finalPath = await ref
+                    .read(recorderStateProvider.notifier)
+                    .stop();
+                print(finalPath);
+              } else {
+                ref.read(recorderStateProvider.notifier).startRecord();
+              }
             },
             child: SizedBox.square(
               dimension: size,
@@ -58,8 +68,8 @@ class RecordButton extends HookConsumerWidget {
                   ),
                   Center(
                     child: AnimatedContainer(
-                      height: (isRecording.value) ? size / 8 : size / 3,
-                      width: (isRecording.value) ? size / 8 : size / 3,
+                      height: (isRecording) ? size / 8 : size / 3,
+                      width: (isRecording) ? size / 8 : size / 3,
                       duration: Duration(milliseconds: 500),
                       curve: Curves.easeInOutCubic,
                       decoration: ShapeDecoration(
