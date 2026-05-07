@@ -18,15 +18,19 @@ class RecordLine extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final height = MediaQuery.heightOf(context) * 0.3;
-    final ampHeights = useState<List<int>?>(null);
+    final ampHeights = useState<List<double>>([0.0]);
 
     final colorScheme = Theme.of(context).colorScheme;
 
     useEffect(() {
-      Timer.periodic(const Duration(milliseconds: 250), (timer) async {
+      Timer.periodic(const Duration(milliseconds: 100), (timer) async {
         final ampValue = await ref
             .read(recorderStateProvider.notifier)
             .getCurrentAmplitude();
+
+        if (ampValue != null) {
+          ampHeights.value.add(ampValue);
+        }
       });
       return null;
     }, []);
@@ -56,12 +60,21 @@ class RecordLinePainter extends CustomPainter {
   const RecordLinePainter({required this.context, required this.ampHeights});
 
   final BuildContext context;
-  final List<int?> ampHeights;
+  final List<double> ampHeights;
+
+  double mapMinus160to160To0toMax(double x, double max) {
+    final t = ((x + 160.0) / 320.0).clamp(0.0, 1.0);
+    return t * max;
+  }
 
   @override
   void paint(Canvas canvas, Size size) {
     final colorScheme = Theme.of(context).colorScheme;
     final center = Offset(size.width / 2, size.height / 2);
+
+    final heights = ampHeights.map((height) {
+      return mapMinus160to160To0toMax(height, size.height / 2);
+    }).toList();
 
     final centerLinePaint = Paint()
       ..color = colorScheme.surfaceContainerHighest
@@ -81,13 +94,13 @@ class RecordLinePainter extends CustomPainter {
     );
 
     var index = 0;
-    for (var height in ampHeights) {
+    for (var height in heights.reversed) {
       canvas.drawLine(
-        Offset(-1 * index.toDouble(), -(size.height / 2)),
-        Offset(-1 * index.toDouble(), (size.height / 2)),
+        Offset(-1 * index.toDouble(), -1 * height * 1.2),
+        Offset(-1 * index.toDouble(), height * 1.2),
         wavePaint,
       );
-      index++;
+      index += 4;
     }
   }
 
