@@ -1,7 +1,3 @@
-// Dart imports:
-import 'dart:async';
-import 'dart:typed_data';
-
 // Flutter imports:
 import 'package:flutter/material.dart';
 
@@ -15,25 +11,47 @@ import 'package:record_essence/providers/record_provider.dart';
 class RecordLine extends HookConsumerWidget {
   const RecordLine({super.key});
 
+  static const _ampInterval = Duration(milliseconds: 100);
+  static const int _xStep = 4;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final height = MediaQuery.heightOf(context) * 0.3;
     final ampHeights = useState<List<double>>([0.0]);
 
+    final isRecording = ref.watch(isRecordingProvider);
+
     final colorScheme = Theme.of(context).colorScheme;
 
-    useEffect(() {
-      Timer.periodic(const Duration(milliseconds: 100), (timer) async {
-        final ampValue = await ref
-            .read(recorderStateProvider.notifier)
-            .getCurrentAmplitude();
+    final screenWidth = MediaQuery.sizeOf(context).width;
+    final maxSamples = ((screenWidth / 2) / _xStep).ceil() + 8;
 
-        if (ampValue != null) {
-          ampHeights.value.add(ampValue);
-        }
-      });
-      return null;
-    }, []);
+    void pushAmplitude(double value) {
+      final next = <double>[...ampHeights.value, value];
+      ampHeights.value = next.length <= maxSamples
+          ? next
+          : next.sublist(next.length - maxSamples);
+    }
+
+    useEffect(() {
+      if (!isRecording) {
+        return null;
+      }
+
+      var cancelled = false;
+      final sub = ref
+          .read(recorderStateProvider.notifier)
+          .onAmplitudeChanged(_ampInterval)
+          .listen((ampValue) {
+            if (cancelled) return;
+            pushAmplitude(ampValue);
+          });
+
+      return () {
+        cancelled = true;
+        sub.cancel();
+      };
+    }, [isRecording, maxSamples]);
 
     return Container(
       width: double.infinity,
@@ -48,8 +66,10 @@ class RecordLine extends HookConsumerWidget {
       ),
       child: CustomPaint(
         painter: RecordLinePainter(
-          context: context,
+          centerLineColor: colorScheme.surfaceContainerHighest,
+          waveColor: colorScheme.tertiary,
           ampHeights: ampHeights.value,
+          xStep: _xStep,
         ),
       ),
     );
@@ -57,10 +77,17 @@ class RecordLine extends HookConsumerWidget {
 }
 
 class RecordLinePainter extends CustomPainter {
-  const RecordLinePainter({required this.context, required this.ampHeights});
+  const RecordLinePainter({
+    required this.centerLineColor,
+    required this.waveColor,
+    required this.ampHeights,
+    required this.xStep,
+  });
 
-  final BuildContext context;
+  final Color centerLineColor;
+  final Color waveColor;
   final List<double> ampHeights;
+  final int xStep;
 
   double mapMinus160to160To0toMax(double x, double max) {
     final t = ((x + 160.0) / 320.0).clamp(0.0, 1.0);
@@ -69,23 +96,18 @@ class RecordLinePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final colorScheme = Theme.of(context).colorScheme;
     final center = Offset(size.width / 2, size.height / 2);
 
-    final heights = ampHeights.map((height) {
-      return mapMinus160to160To0toMax(height, size.height / 2);
-    }).toList();
-
     final centerLinePaint = Paint()
-      ..color = colorScheme.surfaceContainerHighest
+      ..color = centerLineColor
       ..strokeWidth = 2
       ..strokeCap = StrokeCap.round;
     final wavePaint = Paint()
-      // ..color = colorScheme.surfaceDim
-      ..color = colorScheme.tertiary
+      ..color = waveColor
       ..strokeWidth = 1
       ..strokeCap = StrokeCap.round;
 
+    canvas.save();
     canvas.translate(center.dx, center.dy);
     canvas.drawLine(
       Offset(0, -(size.height / 2)),
@@ -93,19 +115,18 @@ class RecordLinePainter extends CustomPainter {
       centerLinePaint,
     );
 
-    var index = 0;
-    for (var height in heights.reversed) {
-      if (index >= size.width / 2) {
-        break;
-      }
-
-      canvas.drawLine(
-        Offset(-1 * index.toDouble(), -1 * height * 1.2),
-        Offset(-1 * index.toDouble(), height * 1.2),
-        wavePaint,
-      );
-      index += 4;
+    final halfWidth = (size.width / 2).floor();
+    for (
+      int i = ampHeights.length - 1, x = 0;
+      i >= 0 && x <= halfWidth;
+      i--, x += xStep
+    ) {
+      final h = mapMinus160to160To0toMax(ampHeights[i], size.height / 2) * 1.2;
+      final dx = -x.toDouble();
+      canvas.drawLine(Offset(dx, -h), Offset(dx, h), wavePaint);
     }
+
+    canvas.restore();
   }
 
   @override

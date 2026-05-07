@@ -61,8 +61,6 @@ class RecorderStateNotifier extends Notifier<RecorderState> {
           isPaused: false,
           path: tempPath,
         );
-
-        print(tempPath);
       }
     } catch (e) {
       throw Exception("スタートができません：$e");
@@ -75,6 +73,12 @@ class RecorderStateNotifier extends Notifier<RecorderState> {
       return amplitude.current;
     }
     return null;
+  }
+
+  Stream<double> onAmplitudeChanged(Duration interval) {
+    return recorder
+        .onAmplitudeChanged(interval)
+        .map((amplitude) => amplitude.current);
   }
 
   Stream<Uint8List> startStream() async* {

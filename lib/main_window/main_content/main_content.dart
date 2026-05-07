@@ -19,9 +19,6 @@ class MainContent extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final amp = useState<double?>(null);
-
-    // return Container(child: Center(child: RecordButton()));
     return Container(
       child: Column(
         mainAxisAlignment: .spaceEvenly,
