@@ -26,7 +26,7 @@ class ApiStateBox extends ConsumerWidget {
         children: [
           FontFamilyTheme(
             fontFamily: AppFontFamilies.ndot77JPExtended,
-            child: const Text("API SERVER"),
+            builder: (theme) => const Text("API SERVER"),
           ),
           Container(
             width: 8,

@@ -35,12 +35,12 @@ ThemeData _applyFontFamily({
 class FontFamilyTheme extends StatelessWidget {
   const FontFamilyTheme({
     required this.fontFamily,
-    required this.child,
+    required this.builder,
     super.key,
   });
 
   final String fontFamily;
-  final Widget child;
+  final Widget Function(ThemeData theme) builder;
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +50,7 @@ class FontFamilyTheme extends StatelessWidget {
       data: overridden,
       child: DefaultTextStyle.merge(
         style: TextStyle(fontFamily: fontFamily),
-        child: child,
+        child: builder(overridden),
       ),
     );
   }

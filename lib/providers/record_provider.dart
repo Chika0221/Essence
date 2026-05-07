@@ -69,12 +69,12 @@ class RecorderStateNotifier extends Notifier<RecorderState> {
     }
   }
 
-  Future<double> getCurrentAmplitude() async {
+  Future<double?> getCurrentAmplitude() async {
     if (state.isRecording) {
       final amplitude = await recorder.getAmplitude();
       return amplitude.current;
     }
-    return 0.0;
+    return null;
   }
 
   Stream<Uint8List> startStream() async* {
