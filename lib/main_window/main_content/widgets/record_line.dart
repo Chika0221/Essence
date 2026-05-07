@@ -95,6 +95,10 @@ class RecordLinePainter extends CustomPainter {
 
     var index = 0;
     for (var height in heights.reversed) {
+      if (index >= size.width / 2) {
+        break;
+      }
+
       canvas.drawLine(
         Offset(-1 * index.toDouble(), -1 * height * 1.2),
         Offset(-1 * index.toDouble(), height * 1.2),
