@@ -16,30 +16,28 @@ class MainContent extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Container(
-      child: Column(
-        mainAxisAlignment: .spaceEvenly,
-        crossAxisAlignment: .center,
-        children: [
-          RecordLine(),
-          FontFamilyTheme(
-            fontFamily: AppFontFamilies.ndot77JPExtended,
-            builder: (theme) =>
-                Text("11:23.00", style: theme.textTheme.headlineLarge),
-          ),
+    return Column(
+      mainAxisAlignment: .spaceEvenly,
+      crossAxisAlignment: .center,
+      children: [
+        RecordLine(),
+        FontFamilyTheme(
+          fontFamily: AppFontFamilies.ndot77JPExtended,
+          builder: (theme) =>
+              Text("11:23.00", style: theme.textTheme.headlineLarge),
+        ),
 
-          Row(
-            mainAxisAlignment: .center,
-            children: [
-              FilePickButton(),
-              SizedBox(width: 16),
-              RecordButton(),
-              SizedBox(width: 16),
-              PickRecordingSummarizationButton(),
-            ],
-          ),
-        ],
-      ),
+        Row(
+          mainAxisAlignment: .center,
+          children: [
+            FilePickButton(),
+            SizedBox(width: 16),
+            RecordButton(),
+            SizedBox(width: 16),
+            PickRecordingSummarizationButton(),
+          ],
+        ),
+      ],
     );
   }
 }

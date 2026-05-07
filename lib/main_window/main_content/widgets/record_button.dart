@@ -18,7 +18,10 @@ class RecordButton extends HookConsumerWidget {
     final colorScheme = Theme.of(context).colorScheme;
     const double size = 200;
 
-    final isRecording = ref.watch(isRecordingProvider);
+    final recorderState = ref.watch(recorderStateProvider);
+    final isMoveAnimation =
+        (recorderState.isRecording && !recorderState.isPaused);
+
     final vsync = useSingleTickerProvider();
     final controller = useAnimationController(
       duration: Duration(seconds: 4),
@@ -26,14 +29,13 @@ class RecordButton extends HookConsumerWidget {
     );
 
     useEffect(() {
-      if (isRecording) {
+      if (isMoveAnimation) {
         controller.repeat();
       } else {
         controller.stop();
       }
-
       return null;
-    }, [isRecording]);
+    }, [isMoveAnimation]);
 
     return AnimatedBuilder(
       animation: controller,
@@ -44,13 +46,12 @@ class RecordButton extends HookConsumerWidget {
           painter: RecordPeinter(context: context, angle: angle),
           child: GestureDetector(
             onTap: () async {
-              if (isRecording) {
-                final finalPath = await ref
-                    .read(recorderStateProvider.notifier)
-                    .stop();
-                print(finalPath);
-              } else {
+              if (!recorderState.isRecording) {
                 ref.read(recorderStateProvider.notifier).startRecord();
+              } else if (recorderState.isPaused) {
+                ref.read(recorderStateProvider.notifier).resume();
+              } else {
+                await ref.read(recorderStateProvider.notifier).pause();
               }
             },
             child: SizedBox.square(
@@ -68,8 +69,8 @@ class RecordButton extends HookConsumerWidget {
                   ),
                   Center(
                     child: AnimatedContainer(
-                      height: (isRecording) ? size / 8 : size / 3,
-                      width: (isRecording) ? size / 8 : size / 3,
+                      height: (isMoveAnimation) ? size / 8 : size / 3,
+                      width: (isMoveAnimation) ? size / 8 : size / 3,
                       duration: Duration(milliseconds: 500),
                       curve: Curves.easeInOutCubic,
                       decoration: ShapeDecoration(

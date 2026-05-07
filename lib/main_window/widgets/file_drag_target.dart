@@ -15,14 +15,13 @@ class FileDragTarget extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final size = MediaQuery.of(context).size;
+    final colorScheme = Theme.of(context).colorScheme;
 
     final dragging = useState(false);
 
     return DropTarget(
       onDragDone: (detail) {
-        print("done");
-        print(detail.files);
+        print(detail.files.first.path);
       },
       onDragEntered: (detail) => dragging.value = true,
       onDragExited: (detail) => dragging.value = false,
@@ -30,11 +29,12 @@ class FileDragTarget extends HookConsumerWidget {
         child: Container(
           foregroundDecoration: dragging.value
               ? BoxDecoration(
-                  color: Colors.blue.withOpacity(0.4),
+                  color: colorScheme.surfaceContainer.withValues(alpha: 0.5),
                   border: Border.all(
                     color: Theme.of(context).colorScheme.onSecondaryContainer,
                     width: 8,
                   ),
+                  borderRadius: BorderRadius.circular(4),
                 )
               : null,
           child: child,

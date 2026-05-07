@@ -13,7 +13,7 @@ class PickRecordingSummarizationButton extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    final pick = useState<Set<bool>>({true, false});
+    // final pick = useState<Set<bool>>({true, false});
 
     return Container(
       // height: 120,

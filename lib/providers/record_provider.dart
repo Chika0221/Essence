@@ -31,28 +31,28 @@ class RecorderStateNotifier extends Notifier<RecorderState> {
   }
 
   /// 録音開始
-  Future<void> startRealtimeRecord() async {
-    try {
-      final tempPath = await PathScript.newTempRecordingPath();
+  // Future<void> startRealtimeRecord() async {
+  //   try {
+  //     final tempPath = await PathScript.newTempRecordingPath();
 
-      if (await recorder.hasPermission()) {
-        const config = RecordConfig(encoder: AudioEncoder.pcm16bits);
-        await recorder.start(config, path: tempPath);
-        state = state.copyWith(
-          isRecording: true,
-          isPaused: false,
-          path: tempPath,
-        );
-      }
-    } catch (e) {
-      throw Exception("スタートができません：$e");
-    }
-  }
+  //     if (await recorder.hasPermission()) {
+  //       const config = RecordConfig(encoder: AudioEncoder.pcm16bits);
+  //       await recorder.start(config, path: tempPath);
+  //       state = state.copyWith(
+  //         isRecording: true,
+  //         isPaused: false,
+  //         path: tempPath,
+  //       );
+  //     }
+  //   } catch (e) {
+  //     throw Exception("スタートができません：$e");
+  //   }
+  // }
 
+  // wavで録音スタート
   Future<void> startRecord() async {
     try {
       final tempPath = await PathScript.newTempRecordingPath();
-
       if (await recorder.hasPermission()) {
         const config = RecordConfig(encoder: AudioEncoder.wav);
         await recorder.start(config, path: tempPath);
@@ -67,19 +67,26 @@ class RecorderStateNotifier extends Notifier<RecorderState> {
     }
   }
 
-  Stream<double> onAmplitudeChanged(Duration interval) {
-    return recorder
-        .onAmplitudeChanged(interval)
-        .map((amplitude) => amplitude.current);
-  }
-
+  // Streamで録音スタート
   Stream<Uint8List> startStream() async* {
     const config = RecordConfig(encoder: AudioEncoder.pcm16bits);
     final stream = await recorder.startStream(config);
     yield* stream;
   }
 
-  /// 録音停止
+  // 録音の再開
+  Future<void> resume() async {
+    await recorder.resume();
+    state = state.copyWith(isPaused: false);
+  }
+
+  // 録音の一時停止
+  Future<void> pause() async {
+    await recorder.pause();
+    state = state.copyWith(isPaused: true);
+  }
+
+  // 録音停止
   Future<String?> stop() async {
     final path = await recorder.stop();
     if (path == null) {
@@ -92,4 +99,15 @@ class RecorderStateNotifier extends Notifier<RecorderState> {
 
     return savePath;
   }
+
+  // Streamで音量取得
+  Stream<double> onAmplitudeChanged(Duration interval) {
+    return recorder
+        .onAmplitudeChanged(interval)
+        .map((amplitude) => amplitude.current);
+  }
+
+  // Stream<Stream> onElapsedTimeChanged() {
+  //   return recorder.
+  // }
 }
