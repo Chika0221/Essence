@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
+import 'package:record_essence/main_window/main_content/widgets/file_pick_button.dart';
+import 'package:record_essence/main_window/main_content/widgets/pick_recording_summarization_button.dart';
 import 'package:record_essence/main_window/main_content/widgets/record_button.dart';
 import 'package:record_essence/main_window/main_content/widgets/record_line.dart';
 import 'package:record_essence/providers/theme_provider.dart';
@@ -17,6 +19,7 @@ class MainContent extends HookConsumerWidget {
     return Container(
       child: Column(
         mainAxisAlignment: .spaceEvenly,
+        crossAxisAlignment: .center,
         children: [
           RecordLine(),
           FontFamilyTheme(
@@ -24,7 +27,17 @@ class MainContent extends HookConsumerWidget {
             builder: (theme) =>
                 Text("11:23.00", style: theme.textTheme.headlineLarge),
           ),
-          RecordButton(),
+
+          Row(
+            mainAxisAlignment: .center,
+            children: [
+              FilePickButton(),
+              SizedBox(width: 16),
+              RecordButton(),
+              SizedBox(width: 16),
+              PickRecordingSummarizationButton(),
+            ],
+          ),
         ],
       ),
     );
