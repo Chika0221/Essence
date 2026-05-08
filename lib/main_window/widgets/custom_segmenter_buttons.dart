@@ -77,10 +77,23 @@ class CustomSegment extends StatelessWidget {
       child: Row(
         mainAxisSize: .min,
         children: [
-          icon,
+          Iconify(
+            icon.icon,
+            color: (selected)
+                ? Theme.of(context).colorScheme.onSurface
+                : Theme.of(context).colorScheme.secondaryContainer,
+          ),
           if (selected) ...[
             SizedBox(width: 8),
-            Text(label, style: Theme.of(context).textTheme.titleMedium),
+            Text(
+              label,
+              style: Theme.of(context).textTheme.titleMedium
+                ?..copyWith(
+                  color: (selected)
+                      ? Theme.of(context).colorScheme.onSurface
+                      : Theme.of(context).colorScheme.surfaceContainerHigh,
+                ),
+            ),
           ],
         ],
       ),

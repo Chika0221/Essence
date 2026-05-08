@@ -10,6 +10,7 @@ import 'package:record_essence/main_window/main_content/widgets/history_save_but
 import 'package:record_essence/main_window/main_content/widgets/pick_recording_summarization_button.dart';
 import 'package:record_essence/main_window/main_content/widgets/record_button.dart';
 import 'package:record_essence/main_window/main_content/widgets/record_line.dart';
+import 'package:record_essence/main_window/main_content/widgets/select_summary_mode_buttons.dart';
 import 'package:record_essence/providers/theme_provider.dart';
 
 class MainContent extends HookConsumerWidget {
@@ -38,7 +39,15 @@ class MainContent extends HookConsumerWidget {
             HistorySaveButton(),
           ],
         ),
-        PickRecordingSummarizationButton(),
+        Row(
+          mainAxisSize: .min,
+          mainAxisAlignment: .center,
+          children: [
+            PickRecordingSummarizationButton(),
+            SizedBox(width: 8),
+            SelectSummaryModeButtons(),
+          ],
+        ),
       ],
     );
   }
