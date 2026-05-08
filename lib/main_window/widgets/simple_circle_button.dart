@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:iconify_flutter_plus/iconify_flutter_plus.dart';
-import 'package:iconify_flutter_plus/icons/tabler.dart';
 
 // Project imports:
 import 'package:record_essence/scripts/path_script.dart';

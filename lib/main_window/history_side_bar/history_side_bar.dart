@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:iconify_flutter_plus/icons/tabler.dart';
 
 // Project imports:
 import 'package:record_essence/main_window/widgets/api_state_box.dart';
 import 'package:record_essence/providers/ui_state/history_side_bar_open_provider.dart';
+import 'package:record_essence/theme/my_tabler.dart';
 import '../widgets/custom_title_bar.dart';
 
 class HistorySideBar extends HookConsumerWidget {
@@ -34,7 +34,7 @@ class HistorySideBar extends HookConsumerWidget {
                 mainAxisAlignment: .end,
                 children: [
                   WindowButton(
-                    icon: Tabler.menu_2,
+                    icon: MyTabler.menu_2,
                     onClick: () {
                       ref.read(historySideBarOpenProvider.notifier).close();
                     },
