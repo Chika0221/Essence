@@ -86,6 +86,11 @@ class RecorderStateNotifier extends Notifier<RecorderState> {
     state = state.copyWith(isPaused: true);
   }
 
+  Future<void> cancel() async {
+    await recorder.cancel();
+    state = const RecorderState(path: null);
+  }
+
   // 録音停止
   Future<String?> stop() async {
     final path = await recorder.stop();

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:iconify_flutter_plus/iconify_flutter_plus.dart';
 
 class SimpleCircleButton extends HookConsumerWidget {
   const SimpleCircleButton({
@@ -10,24 +11,50 @@ class SimpleCircleButton extends HookConsumerWidget {
     this.size = const Size(100, 100),
     required this.icon,
     required this.onPressed,
+
+    this.selected = false,
+    this.enable = true,
+    this.selectedBackgroundColor,
+    this.backgroundColor,
+    this.selectedForegroundColor,
+    this.foregroundColor,
   });
 
   final Size size;
-  final Widget icon;
+  final String icon;
   final void Function() onPressed;
+  final bool selected;
+  final bool enable;
+  final Color? selectedBackgroundColor;
+  final Color? backgroundColor;
+  final Color? selectedForegroundColor;
+  final Color? foregroundColor;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    return Container(
-      height: size.height,
-      width: size.width,
+    final effectiveBgColor = selected
+        ? (selectedBackgroundColor ?? colorScheme.onSurface)
+        : (backgroundColor ?? colorScheme.surfaceContainerHigh);
+
+    final effectiveFgColor = selected
+        ? (selectedForegroundColor ?? colorScheme.surfaceContainer)
+        : (foregroundColor ?? colorScheme.onSurface);
+
+    return AnimatedContainer(
+      duration: Duration(milliseconds: 128),
+      curve: Curves.easeInOutCubic,
+      height: (enable) ? size.height : 0,
+      width: (enable) ? size.width : 0,
       decoration: ShapeDecoration(
         shape: CircleBorder(),
-        color: colorScheme.surfaceContainerHigh,
+        color: effectiveBgColor,
       ),
-      child: IconButton(icon: icon, onPressed: onPressed),
+      child: IconButton(
+        icon: Iconify(icon, color: effectiveFgColor),
+        onPressed: onPressed,
+      ),
     );
   }
 }

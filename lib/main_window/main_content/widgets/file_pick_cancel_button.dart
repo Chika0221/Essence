@@ -7,33 +7,34 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 // Project imports:
 import 'package:record_essence/main_window/widgets/simple_circle_button.dart';
 import 'package:record_essence/providers/record_provider.dart';
+import 'package:record_essence/scripts/path_script.dart';
 import 'package:record_essence/theme/my_tabler.dart';
 
-class HistorySaveButton extends HookConsumerWidget {
-  const HistorySaveButton({super.key});
-
+class FilePickButton extends HookConsumerWidget {
+  const FilePickButton({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final recorderState = ref.watch(recorderStateProvider);
     final mode = (recorderState.isRecording)
-        ? _ButtonMode.save
-        : _ButtonMode.history;
+        ? _ButtonMode.cancel
+        : _ButtonMode.pick;
 
     return switch (mode) {
-      _ButtonMode.history => SimpleCircleButton(
-        icon: MyTabler.history,
-        onPressed: () {},
+      _ButtonMode.pick => SimpleCircleButton(
+        icon: MyTabler.file_import,
+        onPressed: () {
+          print(PathScript.pickFile());
+        },
       ),
-      _ButtonMode.save => SimpleCircleButton(
-        icon: MyTabler.device_floppy,
+      _ButtonMode.cancel => SimpleCircleButton(
+        icon: MyTabler.x,
         enable: recorderState.isPaused,
-        selected: true,
-        onPressed: () async {
-          print(await ref.read(recorderStateProvider.notifier).stop());
+        onPressed: () {
+          ref.read(recorderStateProvider.notifier).cancel();
         },
       ),
     };
   }
 }
 
-enum _ButtonMode { history, save }
+enum _ButtonMode { pick, cancel }

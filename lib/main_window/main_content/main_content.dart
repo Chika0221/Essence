@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
-import 'package:record_essence/main_window/main_content/widgets/file_pick_button.dart';
+import 'package:record_essence/main_window/main_content/widgets/file_pick_cancel_button.dart';
 import 'package:record_essence/main_window/main_content/widgets/history_save_button.dart';
 import 'package:record_essence/main_window/main_content/widgets/pick_recording_summarization_button.dart';
 import 'package:record_essence/main_window/main_content/widgets/record_button.dart';
