@@ -34,9 +34,9 @@ class MainContent extends HookConsumerWidget {
             SizedBox(width: 16),
             RecordButton(),
             SizedBox(width: 16),
-            PickRecordingSummarizationButton(),
           ],
         ),
+        PickRecordingSummarizationButton(),
       ],
     );
   }

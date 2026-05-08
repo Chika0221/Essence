@@ -7,6 +7,7 @@ import 'package:iconify_flutter_plus/iconify_flutter_plus.dart';
 import 'package:iconify_flutter_plus/icons/tabler.dart';
 
 // Project imports:
+import 'package:record_essence/main_window/widgets/simple_circle_button.dart';
 import 'package:record_essence/scripts/path_script.dart';
 
 class FilePickButton extends HookConsumerWidget {
@@ -15,19 +16,11 @@ class FilePickButton extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    return Container(
-      height: 100,
-      width: 100,
-      decoration: ShapeDecoration(
-        shape: CircleBorder(),
-        color: colorScheme.surfaceContainerHigh,
-      ),
-      child: IconButton(
-        icon: Iconify(Tabler.file_dots, color: colorScheme.onSurface),
-        onPressed: () {
-          print(PathScript.pickFile());
-        },
-      ),
+    return SimpleCircleButton(
+      icon: Iconify(Tabler.file_dots, color: colorScheme.onSurface),
+      onPressed: () {
+        print(PathScript.pickFile());
+      },
     );
   }
 }

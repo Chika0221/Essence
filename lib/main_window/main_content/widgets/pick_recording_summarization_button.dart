@@ -7,28 +7,26 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:iconify_flutter_plus/iconify_flutter_plus.dart';
 import 'package:iconify_flutter_plus/icons/tabler.dart';
 
+// Project imports:
+import 'package:record_essence/main_window/widgets/custom_segmenter_buttons.dart';
+
 class PickRecordingSummarizationButton extends HookConsumerWidget {
   const PickRecordingSummarizationButton({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    // final pick = useState<Set<bool>>({true, false});
+    final select = useState(0);
 
-    return Container(
-      // height: 120,
-      decoration: ShapeDecoration(
-        shape: StadiumBorder(),
-        color: colorScheme.surfaceContainerHigh,
-      ),
-      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-      child: Row(
-        children: [
-          IconButton(onPressed: () {}, icon: Iconify(Tabler.abacus_off)),
-          SizedBox(width: 8),
-          IconButton(onPressed: () {}, icon: Iconify(Tabler.abacus_off)),
-        ],
-      ),
+    return CustomSegmenterButtons(
+      onSelected: (selected) {
+        select.value = selected;
+      },
+      segments: [
+        CustomSegment(icon: Iconify(Tabler.access_point_off), label: "label"),
+        CustomSegment(icon: Iconify(Tabler.access_point_off), label: "label"),
+      ],
+      selected: select.value,
     );
   }
 }
