@@ -6,6 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
 import 'package:record_essence/main_window/main_content/widgets/file_pick_button.dart';
+import 'package:record_essence/main_window/main_content/widgets/history_save_button.dart';
 import 'package:record_essence/main_window/main_content/widgets/pick_recording_summarization_button.dart';
 import 'package:record_essence/main_window/main_content/widgets/record_button.dart';
 import 'package:record_essence/main_window/main_content/widgets/record_line.dart';
@@ -34,6 +35,7 @@ class MainContent extends HookConsumerWidget {
             SizedBox(width: 16),
             RecordButton(),
             SizedBox(width: 16),
+            HistorySaveButton(),
           ],
         ),
         PickRecordingSummarizationButton(),
