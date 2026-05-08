@@ -14,8 +14,6 @@ class PickRecordingSummarizationButton extends HookConsumerWidget {
   const PickRecordingSummarizationButton({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final colorScheme = Theme.of(context).colorScheme;
-
     final select = useState(0);
 
     return CustomSegmenterButtons(

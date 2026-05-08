@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:iconify_flutter_plus/iconify_flutter_plus.dart';
 
 // Project imports:
 import 'package:record_essence/app_bar_window/app_bar_window.dart';
