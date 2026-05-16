@@ -11,7 +11,12 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
-import 'package:record_essence/providers/window_mode_provider.dart';
+import 'package:record_essence/app_bar_window/widgets/record_stop_button.dart';
+import 'package:record_essence/app_bar_window/widgets/window_change_button.dart';
+import 'package:record_essence/main_window/main_content/widgets/record_line.dart';
+
+const double appBarHeight = 64;
+const double childMaxHeight = appBarHeight - 8;
 
 class AppBarWindow extends HookConsumerWidget {
   const AppBarWindow({super.key});
@@ -25,8 +30,8 @@ class AppBarWindow extends HookConsumerWidget {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         doWhenWindowReady(() {
           appWindow.title = 'Record Essence - AppBar';
-          const fixedSize = Size(10000, 64);
-          appWindow.minSize = Size(200, 64);
+          const fixedSize = Size(10000, appBarHeight);
+          appWindow.minSize = Size(200, appBarHeight);
           // appWindow.maxSize = Size.fromHeight(64);
           appWindow.size = fixedSize;
           appWindow.alignment = Alignment.topCenter;
@@ -47,7 +52,7 @@ class AppBarWindow extends HookConsumerWidget {
         channel.invokeMethod('setAppBar', {
           'enabled': true,
           'edge': 'top',
-          'thickness': 64.0,
+          'thickness': appBarHeight,
         });
       });
 
@@ -57,18 +62,15 @@ class AppBarWindow extends HookConsumerWidget {
     }, const []);
 
     return Scaffold(
-      body: Center(
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
         child: Row(
+          mainAxisAlignment: .center,
           spacing: 4,
           children: [
-            Text("バー"),
-            Slider(value: 1, onChanged: (value) {}),
-            OutlinedButton(
-              onPressed: () async {
-                ref.read(windowModeProvider.notifier).toggle();
-              },
-              child: Text("aaaa"),
-            ),
+            RecordStopButton(),
+            SizedBox(width: 400, child: RecordLine()),
+            WindowChangeButton(),
           ],
         ),
       ),
