@@ -112,6 +112,10 @@ class RecorderStateNotifier extends Notifier<RecorderState> {
         .map((amplitude) => amplitude.current);
   }
 
+  void resetAmpList() {
+    
+  }
+
   // Stream<Stream> onElapsedTimeChanged() {
   //   return recorder.
   // }

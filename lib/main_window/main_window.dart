@@ -26,6 +26,7 @@ class MainWindow extends HookConsumerWidget {
     useEffect(() {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         doWhenWindowReady(() {
+          appWindow.hide();
           appWindow.title = 'Record Essence';
           appWindow.minSize = Size(400, 300);
           appWindow.size = Size(900, 700);

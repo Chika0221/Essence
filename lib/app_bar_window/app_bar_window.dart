@@ -29,10 +29,10 @@ class AppBarWindow extends HookConsumerWidget {
     useEffect(() {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         doWhenWindowReady(() {
+          appWindow.hide();
           appWindow.title = 'Record Essence - AppBar';
           const fixedSize = Size(10000, appBarHeight);
           appWindow.minSize = Size(200, appBarHeight);
-          // appWindow.maxSize = Size.fromHeight(64);
           appWindow.size = fixedSize;
           appWindow.alignment = Alignment.topCenter;
           appWindow.show();
@@ -66,12 +66,8 @@ class AppBarWindow extends HookConsumerWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
         child: Row(
           mainAxisAlignment: .center,
-          spacing: 4,
-          children: [
-            RecordStopButton(),
-            SizedBox(width: 400, child: RecordLine()),
-            WindowChangeButton(),
-          ],
+          spacing: 8,
+          children: [RecordStopButton(), WindowChangeButton()],
         ),
       ),
     );

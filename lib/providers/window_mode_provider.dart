@@ -9,8 +9,7 @@ final windowModeProvider =
 class WindowModeNotifier extends Notifier<WindowMode> {
   @override
   WindowMode build() {
-    // return WindowMode.main;
-    return WindowMode.appBar;
+    return WindowMode.main;
   }
 
   void toggle() {
