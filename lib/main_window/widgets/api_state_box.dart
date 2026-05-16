@@ -22,13 +22,20 @@ class ApiStateBox extends ConsumerWidget {
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       child: Row(
         crossAxisAlignment: .center,
-        mainAxisAlignment: .spaceBetween,
+        mainAxisAlignment: .spaceAround,
         children: [
           FontFamilyTheme(
             fontFamily: AppFontFamilies.ndot77JPExtended,
-            child: const Text("API SERVER"),
+            builder: (theme) => const Text("API SERVER"),
           ),
-          Container(width: 24, height: 24, color: Colors.green),
+          Container(
+            width: 8,
+            height: 8,
+            decoration: ShapeDecoration(
+              shape: CircleBorder(),
+              color: Colors.green,
+            ),
+          ),
         ],
       ),
     );

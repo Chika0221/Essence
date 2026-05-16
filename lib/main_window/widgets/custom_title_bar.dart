@@ -1,4 +1,6 @@
 // Flutter imports:
+
+// Flutter imports:
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -6,15 +8,18 @@ import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:iconify_flutter_plus/iconify_flutter_plus.dart';
-import 'package:iconify_flutter_plus/icons/tabler.dart';
 import 'package:window_manager/window_manager.dart';
 
 // Project imports:
 import 'package:record_essence/providers/app_window_state_provider.dart';
+import 'package:record_essence/providers/ui_state/history_side_bar_open_provider.dart';
 import 'package:record_essence/providers/window_mode_provider.dart';
+import 'package:record_essence/theme/my_tabler.dart';
 
 class CustomTitleBar extends HookConsumerWidget implements PreferredSizeWidget {
-  const CustomTitleBar({super.key});
+  const CustomTitleBar({super.key, this.isShowOpenSideBar = false});
+
+  final bool isShowOpenSideBar;
 
   @override
   Size get preferredSize => Size.fromHeight(kToolbarHeight);
@@ -28,29 +33,37 @@ class CustomTitleBar extends HookConsumerWidget implements PreferredSizeWidget {
       child: Row(
         mainAxisAlignment: .end,
         children: [
+          if (isShowOpenSideBar)
+            WindowButton(
+              icon: MyTabler.menu_2,
+              onClick: () {
+                ref.read(historySideBarOpenProvider.notifier).open();
+              },
+            ),
+
           Expanded(child: WindowTitleBarBox(child: MoveWindow())),
           WindowButton(
-            icon: Tabler.adjustments,
+            icon: MyTabler.adjustments,
             onClick: () {
               /* TODO: Implement settings button action */
             },
           ),
           WindowButton(
-            icon: Tabler.arrow_bar_to_up,
+            icon: MyTabler.arrow_bar_to_up,
             onClick: () {
               ref.read(windowModeProvider.notifier).setAppBar();
             },
           ),
           WindowButton(
-            icon: Tabler.separator,
+            icon: MyTabler.separator,
             onClick: () {
               wm.minimize();
             },
           ),
           WindowButton(
             icon: (windowState.isMaximized)
-                ? Tabler.arrows_diagonal_minimize_2
-                : Tabler.arrows_diagonal,
+                ? MyTabler.arrows_diagonal_minimize_2
+                : MyTabler.arrows_diagonal,
             onClick: () {
               if (windowState.isMaximized) {
                 wm.unmaximize();
@@ -60,7 +73,7 @@ class CustomTitleBar extends HookConsumerWidget implements PreferredSizeWidget {
             },
           ),
           WindowButton(
-            icon: Tabler.x,
+            icon: MyTabler.x,
             onClick: () {
               wm.close();
             },

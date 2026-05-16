@@ -43,6 +43,11 @@ dependencies:
   bitsdojo_window: ^0.1.6
   import_sorter: ^4.6.0
   iconify_flutter_plus: ^1.0.4
+  record: ^6.2.0
+  path_provider: ^2.1.5
+  path: ^1.9.1
+  filepicker_windows: ^2.1.4
+  desktop_drop: ^0.7.1
 
 dev_dependencies:
   flutter_test:

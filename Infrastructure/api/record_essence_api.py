@@ -38,7 +38,7 @@ async def transcribe_and_stream(job_id: str) -> None:
 
         # whisperによる文字起こし
         def _transcribe_chunk(path: str) -> str:
-            segments, _ = whisper_model.transcribe(path, beam_size=5, vad_filter=True)
+            segments, _ = whisper_model.transcribe(path, beam_size=5, vad_filter=True, )
             return "".join([seg.text for seg in segments])
 
         chunk_text = await asyncio.to_thread(_transcribe_chunk, chunk_path)
@@ -96,7 +96,7 @@ async def lifespan(app: FastAPI):
     print("ollama起動中...")
     ollama_proc = subprocess.Popen(["ollama", "serve"])
     print("音声認識モデルをロード中...")
-    whisper_model = WhisperModel("base", device="cpu", compute_type="int8")
+    whisper_model = WhisperModel("medium", device="cpu", compute_type="int8")
 
     try:
         yield
