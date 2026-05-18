@@ -8,15 +8,22 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:record_essence/providers/theme_provider.dart';
 
 class ApiStateBox extends ConsumerWidget {
-  const ApiStateBox({super.key});
+  const ApiStateBox({super.key, this.isStadiumShape = false});
+
+  final bool isStadiumShape;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
-        color: Theme.of(context).colorScheme.surfaceContainerHigh,
-      ),
+      decoration: isStadiumShape
+          ? ShapeDecoration(
+              shape: StadiumBorder(),
+              color: Theme.of(context).colorScheme.surfaceContainerHigh,
+            )
+          : BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              color: Theme.of(context).colorScheme.surfaceContainerHigh,
+            ),
       width: 128,
       height: 32,
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),

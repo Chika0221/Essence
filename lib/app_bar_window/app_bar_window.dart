@@ -11,11 +11,18 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
+import 'package:record_essence/app_bar_window/widgets/record_info_box.dart';
 import 'package:record_essence/app_bar_window/widgets/record_stop_button.dart';
 import 'package:record_essence/app_bar_window/widgets/window_change_button.dart';
 import 'package:record_essence/main_window/main_content/widgets/record_line.dart';
+import 'package:record_essence/main_window/widgets/api_state_box.dart';
 
-const double appBarHeight = 64;
+const double appBarHeight = 84;
+const EdgeInsets edgePadding = EdgeInsets.symmetric(
+  horizontal: 16,
+  vertical: 4,
+);
+
 const double childMaxHeight = appBarHeight - 8;
 
 class AppBarWindow extends HookConsumerWidget {
@@ -63,11 +70,11 @@ class AppBarWindow extends HookConsumerWidget {
 
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+        padding: edgePadding,
         child: Row(
           mainAxisAlignment: .center,
           spacing: 8,
-          children: [RecordStopButton(), WindowChangeButton()],
+          children: [RecordStopButton(), RecordInfoBox(), WindowChangeButton()],
         ),
       ),
     );

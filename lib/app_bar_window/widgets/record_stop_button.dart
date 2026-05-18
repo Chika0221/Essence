@@ -7,7 +7,7 @@ import 'package:iconify_flutter_plus/icons/tabler.dart';
 
 // Project imports:
 import 'package:record_essence/app_bar_window/app_bar_window.dart';
-import 'package:record_essence/main_window/widgets/simple_circle_button.dart';
+import 'package:record_essence/main_window/widgets/simple_rectangle_button.dart';
 import 'package:record_essence/providers/record_provider.dart';
 
 class RecordStopButton extends HookConsumerWidget {
@@ -23,14 +23,14 @@ class RecordStopButton extends HookConsumerWidget {
         : _ButtonMode.stop;
 
     return switch (mode) {
-      .recording => SimpleCircleButton(
+      .recording => SimpleRectangleButton(
         backgroundColor: colorScheme.tertiary,
         foregroundColor: colorScheme.onTertiary,
         size: Size(childMaxHeight, childMaxHeight),
         icon: Tabler.player_stop,
         onPressed: () {},
       ),
-      .stop => SimpleCircleButton(
+      .stop => SimpleRectangleButton(
         foregroundColor: colorScheme.tertiary,
         size: Size(childMaxHeight, childMaxHeight),
         icon: Tabler.circle,
