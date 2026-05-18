@@ -18,6 +18,30 @@ final isRecordingProvider = Provider((ref) {
   return ref.watch(recorderStateProvider.select((state) => state.isRecording));
 });
 
+final amplitudeChangedStreamProvider = StreamProvider<List<double>>((ref) {
+  const _ampInterval = Duration(milliseconds: 100);
+  final List<double> _amplitudeHistory = [];
+
+  final isRecording = ref.watch(
+    recorderStateProvider.select((state) => state.isRecording),
+  );
+
+  if (!isRecording) {
+    // Not recording: emit an empty list stream.
+    return Stream.value(List<double>.from(_amplitudeHistory));
+  }
+
+  final amplitudeStream = ref
+      .read(recorderStateProvider.notifier)
+      .onAmplitudeChanged(_ampInterval)
+      .map((ampValue) {
+        _amplitudeHistory.add(ampValue);
+        return List<double>.from(_amplitudeHistory);
+      });
+
+  return amplitudeStream;
+});
+
 class RecorderStateNotifier extends Notifier<RecorderState> {
   late final recorder = AudioRecorder();
 
@@ -107,13 +131,9 @@ class RecorderStateNotifier extends Notifier<RecorderState> {
 
   // Streamで音量取得
   Stream<double> onAmplitudeChanged(Duration interval) {
-    return recorder
-        .onAmplitudeChanged(interval)
-        .map((amplitude) => amplitude.current);
-  }
-
-  void resetAmpList() {
-    
+    return recorder.onAmplitudeChanged(interval).map((amplitude) {
+      return amplitude.current;
+    });
   }
 
   // Stream<Stream> onElapsedTimeChanged() {

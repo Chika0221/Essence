@@ -11,51 +11,32 @@ import 'package:record_essence/providers/record_provider.dart';
 class RecordLine extends HookConsumerWidget {
   const RecordLine({super.key});
 
-  static const _ampInterval = Duration(milliseconds: 100);
   static const int _xStep = 4;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final height = MediaQuery.heightOf(context) * 0.3;
-    final ampHeights = useState<List<double>>([0.0]);
+    final screenSize = MediaQuery.sizeOf(context);
+    final widgetHeight = screenSize.height * 0.3;
+    final colorScheme = Theme.of(context).colorScheme;
 
     final isRecording = ref.watch(isRecordingProvider);
 
-    final colorScheme = Theme.of(context).colorScheme;
+    final maxSamples = ((screenSize.width / 2) / _xStep).ceil() + 8;
 
-    final screenWidth = MediaQuery.sizeOf(context).width;
-    final maxSamples = ((screenWidth / 2) / _xStep).ceil() + 8;
-
-    void pushAmplitude(double value) {
-      final next = <double>[...ampHeights.value, value];
-      ampHeights.value = next.length <= maxSamples
-          ? next
-          : next.sublist(next.length - maxSamples);
-    }
-
-    useEffect(() {
-      if (!isRecording) {
-        return null;
-      }
-
-      var cancelled = false;
-      final sub = ref
-          .read(recorderStateProvider.notifier)
-          .onAmplitudeChanged(_ampInterval)
-          .listen((ampValue) {
-            if (cancelled) return;
-            pushAmplitude(ampValue);
-          });
-
-      return () {
-        cancelled = true;
-        sub.cancel();
-      };
-    }, [isRecording, maxSamples]);
+    final ampAsync = ref.watch(amplitudeChangedStreamProvider);
+    final ampHeights = ampAsync.maybeWhen(
+      data: (list) {
+        final next = list;
+        return next.length <= maxSamples
+            ? List<double>.from(next)
+            : List<double>.from(next.sublist(next.length - maxSamples));
+      },
+      orElse: () => <double>[0.0],
+    );
 
     return Container(
       width: double.infinity,
-      height: height,
+      height: widgetHeight,
       decoration: BoxDecoration(
         border: Border.symmetric(
           horizontal: BorderSide(
@@ -68,7 +49,7 @@ class RecordLine extends HookConsumerWidget {
         painter: RecordLinePainter(
           centerLineColor: colorScheme.surfaceContainerHighest,
           waveColor: colorScheme.tertiary,
-          ampHeights: ampHeights.value,
+          ampHeights: ampHeights,
           xStep: _xStep,
         ),
       ),
