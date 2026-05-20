@@ -16,6 +16,9 @@ import 'package:record_essence/app_bar_window/widgets/record_stop_button.dart';
 import 'package:record_essence/app_bar_window/widgets/window_change_button.dart';
 import 'package:record_essence/main_window/main_content/widgets/record_line.dart';
 import 'package:record_essence/main_window/widgets/api_state_box.dart';
+import 'package:record_essence/providers/record_provider.dart';
+import 'package:record_essence/providers/theme_provider.dart';
+import 'package:record_essence/scripts/date_script.dart';
 
 const double appBarHeight = 84;
 const EdgeInsets edgePadding = EdgeInsets.symmetric(
@@ -74,7 +77,18 @@ class AppBarWindow extends HookConsumerWidget {
         child: Row(
           mainAxisAlignment: .center,
           spacing: 8,
-          children: [RecordStopButton(), RecordInfoBox(), WindowChangeButton()],
+          children: [
+            RecordStopButton(),
+            FontFamilyTheme(
+              fontFamily: AppFontFamilies.ndot77JPExtended,
+              builder: (theme) => Text(
+                ref.watch(recordingTimeProvider).fmtTime(),
+                style: theme.textTheme.headlineLarge,
+              ),
+            ),
+            RecordInfoBox(),
+            WindowChangeButton(),
+          ],
         ),
       ),
     );

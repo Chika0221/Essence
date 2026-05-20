@@ -1,5 +1,9 @@
 // Dart imports:
+import 'dart:async';
 import 'dart:typed_data';
+
+// Flutter imports:
+import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -18,9 +22,13 @@ final isRecordingProvider = Provider((ref) {
   return ref.watch(recorderStateProvider.select((state) => state.isRecording));
 });
 
+final recordingTimeProvider = NotifierProvider<RecordingTimeNotifier, Duration>(
+  RecordingTimeNotifier.new,
+);
+
 final amplitudeChangedStreamProvider = StreamProvider<List<double>>((ref) {
-  const _ampInterval = Duration(milliseconds: 100);
-  final List<double> _amplitudeHistory = [];
+  const ampInterval = Duration(milliseconds: 100);
+  final List<double> amplitudeHistory = [];
 
   final isRecording = ref.watch(
     recorderStateProvider.select((state) => state.isRecording),
@@ -28,19 +36,75 @@ final amplitudeChangedStreamProvider = StreamProvider<List<double>>((ref) {
 
   if (!isRecording) {
     // Not recording: emit an empty list stream.
-    return Stream.value(List<double>.from(_amplitudeHistory));
+    return Stream.value(List<double>.from(amplitudeHistory));
   }
 
   final amplitudeStream = ref
       .read(recorderStateProvider.notifier)
-      .onAmplitudeChanged(_ampInterval)
+      .onAmplitudeChanged(ampInterval)
       .map((ampValue) {
-        _amplitudeHistory.add(ampValue);
-        return List<double>.from(_amplitudeHistory);
+        amplitudeHistory.add(ampValue);
+        return List<double>.from(amplitudeHistory);
       });
 
   return amplitudeStream;
 });
+
+class RecordingTimeNotifier extends Notifier<Duration> {
+  final Stopwatch sw = Stopwatch();
+  Timer? tick;
+
+  bool _initialized = false;
+
+  @override
+  Duration build() {
+    if (!_initialized) {
+      // ensure timer cancelled on dispose
+      ref.onDispose(() {
+        tick?.cancel();
+        tick = null;
+      });
+      _initialized = true;
+    }
+
+    final recorderState = ref.watch(recorderStateProvider);
+
+    if (recorderState.isRecording) {
+      // 録音中
+      if (recorderState.isPaused) {
+        // 一時停止中: Stopwatchを止め、最終の経過時間をstateに反映
+        if (sw.isRunning) sw.stop();
+        _cancelTick();
+        state = sw.elapsed;
+      } else {
+        // 録音中かつ再生中: Stopwatchを動かし、定期的にstateを更新
+        if (!sw.isRunning) sw.start();
+        _ensureTick();
+      }
+    } else {
+      // 録音していない: リセット
+      if (sw.isRunning) sw.stop();
+      sw.reset();
+      _cancelTick();
+      state = Duration.zero;
+    }
+
+    return state;
+  }
+
+  void _ensureTick() {
+    if (tick != null) return;
+    tick = Timer.periodic(const Duration(milliseconds: 100), (_) {
+      // UI向け更新は100ms単位。必要なら間隔は調整する。
+      state = sw.elapsed;
+    });
+  }
+
+  void _cancelTick() {
+    tick?.cancel();
+    tick = null;
+  }
+}
 
 class RecorderStateNotifier extends Notifier<RecorderState> {
   late final recorder = AudioRecorder();

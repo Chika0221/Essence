@@ -9,7 +9,7 @@ final historySideBarOpenProvider =
 class HistorySideBarOpenNotifier extends Notifier<bool> {
   @override
   bool build() {
-    return true;
+    return false;
   }
 
   void toggle() {

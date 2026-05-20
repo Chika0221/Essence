@@ -7,6 +7,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 // Project imports:
 import 'package:record_essence/main_window/widgets/simple_circle_button.dart';
 import 'package:record_essence/providers/record_provider.dart';
+import 'package:record_essence/providers/ui_state/history_side_bar_open_provider.dart';
 import 'package:record_essence/theme/my_tabler.dart';
 
 class HistorySaveButton extends HookConsumerWidget {
@@ -22,7 +23,9 @@ class HistorySaveButton extends HookConsumerWidget {
     return switch (mode) {
       _ButtonMode.history => SimpleCircleButton(
         icon: MyTabler.history,
-        onPressed: () {},
+        onPressed: () {
+          ref.read(historySideBarOpenProvider.notifier).toggle();
+        },
       ),
       _ButtonMode.save => SimpleCircleButton(
         icon: MyTabler.device_floppy,
