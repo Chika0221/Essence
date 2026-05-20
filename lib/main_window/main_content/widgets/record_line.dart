@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
@@ -18,8 +17,6 @@ class RecordLine extends HookConsumerWidget {
     final screenSize = MediaQuery.sizeOf(context);
     final widgetHeight = screenSize.height * 0.3;
     final colorScheme = Theme.of(context).colorScheme;
-
-    final isRecording = ref.watch(isRecordingProvider);
 
     final maxSamples = ((screenSize.width / 2) / _xStep).ceil() + 8;
 

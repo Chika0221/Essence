@@ -14,8 +14,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:record_essence/app_bar_window/widgets/record_info_box.dart';
 import 'package:record_essence/app_bar_window/widgets/record_stop_button.dart';
 import 'package:record_essence/app_bar_window/widgets/window_change_button.dart';
-import 'package:record_essence/main_window/main_content/widgets/record_line.dart';
-import 'package:record_essence/main_window/widgets/api_state_box.dart';
 import 'package:record_essence/providers/record_provider.dart';
 import 'package:record_essence/providers/theme_provider.dart';
 import 'package:record_essence/scripts/date_script.dart';
