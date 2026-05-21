@@ -28,13 +28,17 @@ class RecordStopButton extends HookConsumerWidget {
         foregroundColor: colorScheme.onTertiary,
         size: Size(childMaxHeight, childMaxHeight),
         icon: Tabler.player_stop,
-        onPressed: () {},
+        onPressed: () {
+          ref.read(recorderStateProvider.notifier).stop();
+        },
       ),
       .stop => SimpleRectangleButton(
         foregroundColor: colorScheme.tertiary,
         size: Size(childMaxHeight, childMaxHeight),
         icon: Tabler.circle,
-        onPressed: () {},
+        onPressed: () {
+          ref.read(recorderStateProvider.notifier).startRecord();
+        },
       ),
     };
   }

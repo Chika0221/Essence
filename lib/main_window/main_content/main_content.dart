@@ -22,6 +22,8 @@ class MainContent extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // final String formattedTime = DateFormat();
 
+    final isRecording = ref.watch(isRecordingProvider);
+
     return Column(
       mainAxisAlignment: .spaceEvenly,
       crossAxisAlignment: .center,
@@ -31,7 +33,9 @@ class MainContent extends HookConsumerWidget {
           fontFamily: AppFontFamilies.ndot77JPExtended,
           builder: (theme) => Text(
             ref.watch(recordingTimeProvider).fmtTime(),
-            style: theme.textTheme.headlineLarge,
+            style: theme.textTheme.headlineLarge?.copyWith(
+              fontSize: MediaQuery.sizeOf(context).height / 12,
+            ),
           ),
         ),
 
@@ -45,14 +49,20 @@ class MainContent extends HookConsumerWidget {
             HistorySaveButton(),
           ],
         ),
-        Row(
-          mainAxisSize: .min,
-          mainAxisAlignment: .center,
-          children: [
-            PickRecordingSummarizationButton(),
-            SizedBox(width: 8),
-            SelectSummaryModeButtons(),
-          ],
+        AnimatedContainer(
+          duration: Duration(milliseconds: 128),
+          curve: Curves.easeInOutCubic,
+          height: isRecording ? 0 : null,
+          width: isRecording ? 0 : null,
+          child: Row(
+            mainAxisSize: .min,
+            mainAxisAlignment: .center,
+            children: [
+              PickRecordingSummarizationButton(),
+              SizedBox(width: 8),
+              SelectSummaryModeButtons(),
+            ],
+          ),
         ),
       ],
     );

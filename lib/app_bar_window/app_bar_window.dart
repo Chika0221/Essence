@@ -11,12 +11,11 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
+import 'package:record_essence/app_bar_window/widgets/app_bar_record_line.dart';
 import 'package:record_essence/app_bar_window/widgets/record_info_box.dart';
 import 'package:record_essence/app_bar_window/widgets/record_stop_button.dart';
+import 'package:record_essence/app_bar_window/widgets/time_text.dart';
 import 'package:record_essence/app_bar_window/widgets/window_change_button.dart';
-import 'package:record_essence/providers/record_provider.dart';
-import 'package:record_essence/providers/theme_provider.dart';
-import 'package:record_essence/scripts/date_script.dart';
 
 const double appBarHeight = 84;
 const EdgeInsets edgePadding = EdgeInsets.symmetric(
@@ -74,16 +73,12 @@ class AppBarWindow extends HookConsumerWidget {
         padding: edgePadding,
         child: Row(
           mainAxisAlignment: .center,
+          crossAxisAlignment: .center,
           spacing: 8,
           children: [
             RecordStopButton(),
-            FontFamilyTheme(
-              fontFamily: AppFontFamilies.ndot77JPExtended,
-              builder: (theme) => Text(
-                ref.watch(recordingTimeProvider).fmtTime(),
-                style: theme.textTheme.headlineLarge,
-              ),
-            ),
+            TimeText(),
+            AppBarRecordLine(),
             RecordInfoBox(),
             WindowChangeButton(),
           ],
